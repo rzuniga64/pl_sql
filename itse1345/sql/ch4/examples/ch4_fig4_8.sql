@@ -1,3 +1,7 @@
+/*
+	Figure 4.8 Using an explicit cursor to process rows from a query
+	List of items in basket 6 and check if maximum limit has been reached
+*/
 DECLARE
    CURSOR cur_basket IS
      SELECT bi.idBasket, p.type, bi.price, bi.quantity
@@ -18,15 +22,16 @@ BEGIN
      FETCH cur_basket INTO rec_basket;
       EXIT WHEN cur_basket%NOTFOUND;
       IF rec_basket.type = 'E' THEN lv_rate_num := .05;
-        ELSIF rec_basket.type = 'C' THEN lv_rate_num := .03;
+      ELSIF rec_basket.type = 'C' THEN lv_rate_num := .03;
       END IF;
+	  DBMS_OUTPUT.PUT_LINE('Price is ' || rec_basket.price);	  
       lv_tax_num := lv_tax_num + ((rec_basket.price*rec_basket.qty)*lv_rate_num);
       IF lv_tax_num >=5 THEN
        lv_tax_num := 5;
        EXIT;
       END IF;      
    END LOOP;
-   DBMS_OUTPUT.PUT_LINE(cur_basket%ROWCOUNT);
+   DBMS_OUTPUT.PUT_LINE('Row count = ' || cur_basket%ROWCOUNT);
    CLOSE cur_basket;
    DBMS_OUTPUT.PUT_LINE(lv_tax_num); 
 END;
