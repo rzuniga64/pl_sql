@@ -1,8 +1,8 @@
 /* 
-	Figure4-11 Checking CURSOR FOR loop results
+	Figure4-11 Checking CURSOR's FOR loop results
 	Explicit cursors offer two options to simplify the process of
 	iterating through a table and then performing an update on the
-	database: FOR UPDATE AND WHERE CURRENT OF.
+	database: FOR UPDATE and WHERE CURRENT OF.
 	
 	Cursors have a feature that enables you to instruct the Oracle server
 	to keep track of which physical database row corresponds to each row

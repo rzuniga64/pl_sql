@@ -1,3 +1,6 @@
+/*
+	Figure 4-7 using an explicit cursor to process rows from a query
+*/
 DECLARE 
 	CURSOR cur_basket IS
 		SELECT bi.idBasket, p.type, bi.price, bi.quantity
