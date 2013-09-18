@@ -8,6 +8,11 @@
 	The following example processes UPDATE statements for all employees
 	where JOB is 'Salesman' .  An array is created to hold all the employee
 	IDs used in the WHERE clause of the UPDATE statement.
+	
+	The FORALL statement instructs the system to 'bulk bind' all the 
+	collection elements togehter before sending SQL statements for processing.
+ 	Again, the results of a group of DML statements are submitted at one time
+	instead of each UPDATE statement being submitted seperately.
 */
 DECLARE
 	TYPE emp_type IS TABLE OF NUMBER 
