@@ -1,4 +1,4 @@
---FIGURE 3-14 Performing an INSERT in a block
+--FIGURE 3-14 Performing an INSERT INTO in a block
 DECLARE 
   lv_firstname bb_shopper.firstname%TYPE := 'Jeffrey';
   lv_lastname bb_shopper.lastname%TYPE := 'Brand';
