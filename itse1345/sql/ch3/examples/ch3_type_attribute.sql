@@ -1,4 +1,13 @@
---An example of using %TYPE attribute
+/*
+	An example of using %TYPE attribute
+	
+	When creating variables to hold database column values.,
+	the %TYPE attribute can be used in the variable declaration
+	to provide the data type.  It tells the system to look up a
+	database column's data type and use if for the declared
+	variable.  Specifying a data type this way is called using
+	an anchored data type.
+*/
 DECLARE
   lv_created_date bb_basket.dtcreated%TYPE;
   lv_idbasket bb_basket.idbasket%TYPE;
