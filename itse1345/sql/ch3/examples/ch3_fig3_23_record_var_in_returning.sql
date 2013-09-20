@@ -4,7 +4,7 @@ DECLARE
 BEGIN
 	UPDATE bb_department
 	SET deptname = 'Teas'
-	WHERE iddepartment = 4
+	WHERE iddepartment = 3
 	RETURNING iddepartment, deptname, deptdesc, deptimage
 	INTO rec_dept;
 	DBMS_OUTPUT.PUT_LINE(rec_dept.iddepartment);

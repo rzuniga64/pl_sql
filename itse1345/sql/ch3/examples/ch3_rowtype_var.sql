@@ -12,7 +12,6 @@
 	the record data type to match the table structure information.
 	the table column names are assigned as teh record field names.
 */
-
 DECLARE 
   rec_shopper bb_shopper%ROWTYPE;
 BEGIN
@@ -20,6 +19,7 @@ BEGIN
   INTO rec_shopper
   FROM bb_shopper
   WHERE idshopper = 25;
+  DBMS_OUTPUT.PUT_LINE(rec_shopper.idshopper);
   DBMS_OUTPUT.PUT_LINE(rec_shopper.lastname);
   DBMS_OUTPUT.PUT_LINE(rec_shopper.address);
   DBMS_OUTPUT.PUT_LINE(rec_shopper.email);
