@@ -16,3 +16,4 @@ BEGIN
 	DBMS_OUTPUT.PUT_LINE('order total proc ended');
 END ORDER_TOTAL_SP;
 	
+/

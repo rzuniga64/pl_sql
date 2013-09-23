@@ -2,7 +2,7 @@
 	NOTE: A SELECT statement embedded in a PL/SQL block's executable 
 	section that return no rows results in a 'no data found" error. 
 	A common programming mistake is checking the %NOTFOUND cursor attribute
-	immediately after a SELECT statement to determin whether rows were selected.
+	immediately after a SELECT statement to determine whether rows were selected.
 	This technique doesn't work. After the"no data found" error is raised, the 
 	remaining statements in the block aren't executed.
 */

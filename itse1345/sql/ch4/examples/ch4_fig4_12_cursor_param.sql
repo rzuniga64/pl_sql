@@ -1,7 +1,7 @@
 /*
 	Figure 4-12 Using a cursor parameter
 	Parameters are values passed to the cursor when it's opened and used in the 
-	cursor's SELECT statement to determine ahat data the cursor contains.
+	cursor's SELECT statement to determine what data the cursor contains.
 */
 DECLARE
 	lv_bask1_num bb_basket.idbasket%TYPE := 6;

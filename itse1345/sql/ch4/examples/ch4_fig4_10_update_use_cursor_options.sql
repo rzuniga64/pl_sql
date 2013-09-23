@@ -1,5 +1,6 @@
 /* 
 	Figure4-11 Checking CURSOR's FOR loop results
+	
 	Explicit cursors offer two options to simplify the process of
 	iterating through a table and then performing an update on the
 	database: FOR UPDATE and WHERE CURRENT OF.
