@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE GET_COURSES_USING_IF_SP (lv_student IN enroll.stu_id%TYPE)
+CREATE OR REPLACE PROCEDURE GET_SEX_MAJOR_USING_IF_SP (lv_student IN enroll.stu_id%TYPE)
 AS
    CURSOR cursor_student
    IS
