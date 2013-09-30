@@ -14,9 +14,7 @@
 */
 
 select idproduct "Product ID", productname "Product Name", sum(b.quantity) "Quantity of product sold"
-from bb_product join bb_basketitem b 
-using(idproduct)
-join bb_basket 
-using(idbasket)
+from bb_product join bb_basketitem b using(idproduct)
+join bb_basket using(idbasket)
 group by idproduct, productname
 order by idproduct;
