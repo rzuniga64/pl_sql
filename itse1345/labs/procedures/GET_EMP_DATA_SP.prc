@@ -11,7 +11,7 @@
 	           		- Test one valid employee (Empno = 7654) and one invalid employee (Empno = 7888)
 */
 CREATE OR REPLACE
-PROCEDURE GET_EMP_DATA_SP
+PROCEDURE get_emp_data_sp
 	(lv_empno IN NUMBER)
 AS
 	lv_emp emp%ROWTYPE;
