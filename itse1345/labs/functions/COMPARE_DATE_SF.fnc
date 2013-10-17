@@ -8,8 +8,6 @@
 	here)
 	Preconditions: Dates in standard format
 	Postconditions: Dates unchanged. Comparison Value Returned.
-		           -  Write a simple driver to call and test the procedure
-		           -  Test each of the three different possible comparison values.
 */
 CREATE OR REPLACE FUNCTION compare_date_sf
 	( p_date1 IN DATE, p_date2 IN DATE)

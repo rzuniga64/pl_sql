@@ -1,16 +1,16 @@
 /*
-Purpose: Adjust a string to a specific length.
-		- If there are any leading spaces, delete them.
-		- If the specified length is greater than the actual length of 
-	  	  the string, the string is padded on the right by spaces.
-		- If the specified length is less than the actual length of the
-	  	  string, the string is truncated on the right to the specified 
-	  	  length.
-
-Input Parameters: String, Specified Length
-Output Parameters: None
-Input/Output Parameters: None
-Return Value: VARCHAR2 (adjusted string)
+	Purpose: Adjust a string to a specific length.
+	Input Parameters: String, Specified Length
+	Output Parameters: None
+	Input/Output Parameters: None
+	Return Value: VARCHAR2 (adjusted string)
+	
+	- If there are any leading spaces, delete them.
+	- If the specified length is greater than the actual length of 
+	  the string, the string is padded on the right by spaces.
+	- If the specified length is less than the actual length of the
+	  string, the string is truncated on the right to the specified 
+	  length.
 */
 
 CREATE OR REPLACE
