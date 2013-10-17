@@ -44,3 +44,4 @@ EXCEPTION
     UPDATE physician SET ROW = rec_physician1
       WHERE phys_id = rec_physician1.phys_id;
 END;
+/
