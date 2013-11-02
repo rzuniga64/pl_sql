@@ -1,4 +1,46 @@
 create or replace 
+PACKAGE hospital IS
+/*
+	 t_pattrt is a PL/SQL table which containts a RECORD with the 
+	 following fields: pat_nbr, trt_procedure, phys_id, phys_fname,
+	 phys_lname, and phys specialty
+*/	 
+	TYPE type_treatment_record IS RECORD(
+		pat_nbr treatment.pat_nbr%TYPE,
+		trt_procedure treatment.trt_procedure%TYPE,
+		phys_id treatment.phys_id%TYPE,
+		phys_fname physician.phys_fname%TYPE,
+		phys_lname physician.phys_lname%TYPE,
+		phys_specialty physician.phys_specialty%TYPE
+		);
+    
+	TYPE t_pattrt IS TABLE of type_treatment_record
+		INDEX BY BINARY_INTEGER;
+		
+  -- Record used to verify update or insert from newphys_pp
+	rec_physician physician%ROWTYPE;
+  
+  e_DupPhysFound EXCEPTION;
+  PRAGMA EXCEPTION_INIT(e_DupPhysFound, -00001);
+    
+  -- A procedure name buildpattbl which will build a table of 
+  -- all treatments for all patients.
+  PROCEDURE buildpattbl_pp(po_pat_trt_table OUT t_pattrt);
+  
+  -- A procedure named NewPhys which inserts a new physician in the
+  -- physician table or updates it
+  PROCEDURE newphys_pp(p_physician_record IN physician%ROWTYPE);  
+  
+  -- Two overloaded functions name FindPatient which checks to see 
+  -- if a patient is in the data base ither by patient number or name.
+  FUNCTION find_patient_pp(p_pat_nbr IN patient.pat_nbr%TYPE)
+    RETURN BOOLEAN;
+  FUNCTION find_patient_pp(p_pat_fname IN patient.pat_fname%TYPE,
+                            p_pat_lname IN patient.pat_lname%TYPE)
+    RETURN BOOLEAN;
+END hospital;
+------------------------------------------------------------------------
+create or replace 
 PACKAGE BODY hospital IS
 /*
  	buildpattbl is a procedure which will build a table of all treatments
@@ -52,4 +94,37 @@ EXCEPTION
       DBMS_OUTPUT.PUT_LINE(' ');       
       COMMIT;	
 END newphys_pp;
+------------------------------------------------------------------------
+FUNCTION find_patient_pp(p_pat_nbr IN patient.pat_nbr%TYPE) 
+    RETURN BOOLEAN
+IS 
+  lv_pat_flag BOOLEAN;
+  lv_patient patient%ROWTYPE;  
+BEGIN
+    SELECT *
+    INTO lv_patient
+    FROM patient
+    WHERE pat_nbr = p_pat_nbr;
+    RETURN SQL%FOUND;
+EXCEPTION 
+  WHEN NO_DATA_FOUND THEN 
+    RETURN SQL%FOUND;
+END;
+
+FUNCTION find_patient_pp(p_pat_fname IN patient.pat_fname%TYPE,
+                            p_pat_lname IN patient.pat_lname%TYPE)
+    RETURN BOOLEAN
+IS 
+  lv_pat_flag BOOLEAN;
+  lv_patient patient%ROWTYPE;
+BEGIN
+    SELECT *
+    INTO lv_patient
+    FROM patient
+    WHERE pat_fname = p_pat_fname AND pat_lname = p_pat_lname;
+    RETURN SQL%FOUND;   
+EXCEPTION 
+  WHEN NO_DATA_FOUND THEN 
+    RETURN SQL%FOUND;    
+END;
 END hospital;
