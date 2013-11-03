@@ -23,7 +23,6 @@ BEGIN
 	SELECT phys_id_seq.NEXTVAL
 	INTO lv_phys_id
 	FROM DUAL;
-	
 ------------------------------------------------------------------------  	
 	/*
 	 	Declare a table of the type t_ParTrt.
@@ -61,6 +60,7 @@ BEGIN
 		if the patient is not found.
 	*/
 	
+	-- Use a valid Patient Number to see if a patient is in the database
 	lv_is_patient := hospital.find_patient_pp(lv_patient_id1);
 	IF (lv_is_patient = TRUE) THEN 
 		DBMS_OUTPUT.PUT_LINE('The patient with patient id ' || lv_patient_id1 || ' was found');
@@ -69,6 +69,7 @@ BEGIN
 	END IF;
 	DBMS_OUTPUT.PUT_LINE(' ');
 	  
+	-- Use an invalid Patient Number to see if a patient is not in the database	  
 	lv_is_patient := hospital.find_patient_pp(lv_patient_id2);
 	IF (lv_is_patient = TRUE) THEN 
 		DBMS_OUTPUT.PUT_LINE('The patient with patient id ' || lv_patient_id2 || ' was found');
@@ -77,6 +78,7 @@ BEGIN
 	END IF;
 	DBMS_OUTPUT.PUT_LINE(' ');  
 	  
+	-- Use an valid Patient Name to see if a patient is not in the database	  
 	lv_is_patient := hospital.find_patient_pp(lv_patient_fname, lv_patient_lname);
 	IF (lv_is_patient = TRUE) THEN 
 		DBMS_OUTPUT.PUT_LINE('The patient with patient id ' || lv_patient_fname || ' ' || lv_patient_lname || ' was found');
@@ -85,7 +87,7 @@ BEGIN
 	END IF;
 	DBMS_OUTPUT.PUT_LINE(' ');  	
 ------------------------------------------------------------------------ 	
-		/* 	Use the NewPhys procedure to:
+	/* 	Use the NewPhys procedure to:
 		1. Insert a new physician into the Physician table
 		2. Attempt to insert a physician who already exists in the Physician table
 		3. check for the exception e_DupPhysFound in this driver

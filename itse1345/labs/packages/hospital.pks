@@ -20,10 +20,12 @@ PACKAGE hospital IS
   -- Record used to verify update or insert from newphys_pp
 	rec_physician physician%ROWTYPE;
   
+  -- If a physican is already in a table when doing an INSERT
+  -- raise the exception e_DupPhysFound
   e_DupPhysFound EXCEPTION;
   PRAGMA EXCEPTION_INIT(e_DupPhysFound, -00001);
     
-  -- A procedure name buildpattbl which will build a table of 
+  -- A procedure name BuildPatTbl which will build a table of 
   -- all treatments for all patients.
   PROCEDURE buildpattbl_pp(po_pat_trt_table OUT t_pattrt);
   
@@ -32,7 +34,7 @@ PACKAGE hospital IS
   PROCEDURE newphys_pp(p_physician_record IN physician%ROWTYPE);  
   
   -- Two overloaded functions name FindPatient which checks to see 
-  -- if a patient is in the data base ither by patient number or name.
+  -- if a patient is in the data base either by patient number or name.
   FUNCTION find_patient_pp(p_pat_nbr IN patient.pat_nbr%TYPE)
     RETURN BOOLEAN;
   FUNCTION find_patient_pp(p_pat_fname IN patient.pat_fname%TYPE,
@@ -64,8 +66,10 @@ END buildpattbl_pp;
 PROCEDURE newphys_pp(p_physician_record IN physician%ROWTYPE)
 AS 
 BEGIN
-	-- If the value for Phys_ID is not in the Physician Table, a row is inserted 
-	-- using INSERT into the Physician Table with those values.  
+	/*
+		If the value for Phys_ID is not in the Physician Table, a row is inserted 
+		using INSERT into the Physician Table with those values.  
+	*/
   INSERT INTO physician VALUES p_physician_record
   RETURNING phys_id, phys_fname, phys_lname, phys_phone, phys_specialty
   INTO rec_physician;
@@ -95,6 +99,10 @@ EXCEPTION
       COMMIT;	
 END newphys_pp;
 ------------------------------------------------------------------------
+/*
+	An overloaded functions name FindPatient which checks to see 
+  	if a patient is in the data base either by patient number.
+*/
 FUNCTION find_patient_pp(p_pat_nbr IN patient.pat_nbr%TYPE) 
     RETURN BOOLEAN
 IS 
@@ -110,7 +118,11 @@ EXCEPTION
   WHEN NO_DATA_FOUND THEN 
     RETURN SQL%FOUND;
 END;
-
+------------------------------------------------------------------------
+/*
+	An overloaded functions name FindPatient which checks to see 
+  	if a patient is in the data base either by patient first and last name.
+*/
 FUNCTION find_patient_pp(p_pat_fname IN patient.pat_fname%TYPE,
                             p_pat_lname IN patient.pat_lname%TYPE)
     RETURN BOOLEAN
