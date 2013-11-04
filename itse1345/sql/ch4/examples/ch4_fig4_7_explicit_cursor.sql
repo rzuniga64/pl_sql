@@ -1,30 +1,18 @@
-/*
-	Figure 4-7 using an explicit cursor to process rows from a query
-*/
-DECLARE 
-	CURSOR cur_basket IS
-		SELECT bi.idBasket, p.type, bi.price, bi.quantity
-			FROM bb_basketitem bi INNER JOIN bb_product p
-				USING (idProduct)
-			WHERE bi.idbasket = 6;
-	TYPE type_basket IS RECORD
-		(basket bb_basketitem.idBasket%TYPE,
-		type bb_product.type%TYPE,
-		price bb_basketitem.price%TYPE,
-		qty bb_basketitem.quantity%TYPE);
-	rec_basket type_basket;
-	lv_rate_num NUMBER(2,2);
-	lv_tax_num NUMBER(4,2) := 0;
+DECLARE
+	lv_created_date DATE;
+	lv_basket_num NUMBER(3);
+	lv_qty_num NUMBER(3);
+	lv_sub_num NUMBER(5,2);
+	lv_days_num NUMBER(3);
+	lv_shopper_num NUMBER(3) := 26;
 BEGIN
-	OPEN cur_basket;
-	LOOP
-		FETCH cur_basket INTO rec_basket;
-		EXIT WHEN cur_basket%NOTFOUND;
-		IF rec_basket.type = 'E' THEN lv_rate_num := 0.05;
-		ELSIF rec_basket.type = 'C' THEN lv_rate_num := 0.03;
-		END IF;
-	lv_tax_num := lv_tax_num + ((rec_basket.price * rec_basket.qty) * lv_rate_num);
-	DBMS_OUTPUT.PUT_LINE(lv_tax_num);
-	END LOOP;
-	CLOSE cur_basket;
+	SELECT idbasket, dtcreated, quantity, subtotal
+  INTO lv_basket_num, lv_created_date, lv_qty_num, lv_sub_num
+	FROM bb_basket
+	WHERE idshopper = lv_shopper_num
+	AND orderplaced = 0;
+	lv_days_num := TO_DATE('02/28/13', 'mm/dd/yy') - lv_created_date;
+	DBMS_OUTPUT.PUT_LINE(lv_basket_num || '*' || lv_created_date || '*' 
+										|| lv_qty_num || '*' || lv_sub_num || '*' || lv_days_num);
 END;
+/
