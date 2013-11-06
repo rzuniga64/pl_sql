@@ -1,3 +1,4 @@
+-- Scalar variables can't handle more than one row being return from a query.
 DECLARE
 	lv_created_date DATE;
 	lv_basket_num NUMBER(3);
@@ -7,7 +8,7 @@ DECLARE
 	lv_shopper_num NUMBER(3) := 26;
 BEGIN
 	SELECT idbasket, dtcreated, quantity, subtotal
-  INTO lv_basket_num, lv_created_date, lv_qty_num, lv_sub_num
+  	INTO lv_basket_num, lv_created_date, lv_qty_num, lv_sub_num
 	FROM bb_basket
 	WHERE idshopper = lv_shopper_num
 	AND orderplaced = 0;

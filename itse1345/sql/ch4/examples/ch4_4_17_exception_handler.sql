@@ -13,7 +13,7 @@ DECLARE
    sub bb_basket.subtotal%TYPE);
  rec_basket type_basket;
  lv_days_num NUMBER(3);
- lv_shopper_num NUMBER(3) := 26;	
+ lv_shopper_num NUMBER(3) := 0;	
 BEGIN
  SELECT idBasket, dtcreated, quantity, subtotal
   INTO rec_basket

@@ -14,7 +14,7 @@
 */
 
 CREATE OR REPLACE
-FUNCTION adjust_string_sp
+FUNCTION adjust_string_sf
 	(p_string VARCHAR2, p_specified_length INTEGER)
 RETURN VARCHAR2
 IS

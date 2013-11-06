@@ -42,8 +42,7 @@ PACKAGE hospital IS
     RETURN BOOLEAN;
 END hospital;
 ------------------------------------------------------------------------
-create or replace 
-PACKAGE BODY hospital IS
+CREATE OR REPLACE PACKAGE BODY hospital IS
 /*
  	buildpattbl is a procedure which will build a table of all treatments
  	for all patients.  The table will be an OUT parameter. A second
