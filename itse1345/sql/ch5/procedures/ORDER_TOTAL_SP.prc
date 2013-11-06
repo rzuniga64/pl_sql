@@ -14,6 +14,4 @@ BEGIN
 	ship_cost_sp(p_cnt, p_ship);
 	p_total := NVL(p_sub,0) + NVL(p_ship,0);
 	DBMS_OUTPUT.PUT_LINE('order total proc ended');
-END ORDER_TOTAL_SP;
-	
-/
+END ORDER_TOTAL_SP;	
