@@ -20,12 +20,16 @@ PACKAGE hospital IS
   -- Record used to verify update or insert from newphys_pp
 	rec_physician physician%ROWTYPE;
   
-  -- If a physican is already in a table when doing an INSERT
-  -- raise the exception e_DupPhysFound
+  -- Record used to verify update or insert from newpatient_pp
+	rec_patient patient%ROWTYPE;
+  
+  -- Record used to verify update or insert from newtreatment_pp
+	rec_treatment treatment%ROWTYPE;
+  
   e_DupPhysFound EXCEPTION;
   PRAGMA EXCEPTION_INIT(e_DupPhysFound, -00001);
     
-  -- A procedure name BuildPatTbl which will build a table of 
+  -- A procedure name buildpattbl which will build a table of 
   -- all treatments for all patients.
   PROCEDURE buildpattbl_pp(po_pat_trt_table OUT t_pattrt);
   
@@ -33,8 +37,16 @@ PACKAGE hospital IS
   -- physician table or updates it
   PROCEDURE newphys_pp(p_physician_record IN physician%ROWTYPE);  
   
+  -- A procedure named NewPatient which inserts a new patient in the
+  -- patient table or updates it 
+  PROCEDURE newpatient_pp(p_patient_record IN patient%ROWTYPE);
+  
+  -- A procedure named NewTreatment which inserts a new patient in the
+  -- treatment table or updates it   
+  PROCEDURE newtreatment_pp(p_trt_record IN treatment%ROWTYPE);
+  
   -- Two overloaded functions name FindPatient which checks to see 
-  -- if a patient is in the data base either by patient number or name.
+  -- if a patient is in the data base ither by patient number or name.
   FUNCTION find_patient_pp(p_pat_nbr IN patient.pat_nbr%TYPE)
     RETURN BOOLEAN;
   FUNCTION find_patient_pp(p_pat_fname IN patient.pat_fname%TYPE,
@@ -42,7 +54,8 @@ PACKAGE hospital IS
     RETURN BOOLEAN;
 END hospital;
 ------------------------------------------------------------------------
-CREATE OR REPLACE PACKAGE BODY hospital IS
+create or replace 
+PACKAGE BODY hospital IS
 /*
  	buildpattbl is a procedure which will build a table of all treatments
  	for all patients.  The table will be an OUT parameter. A second
@@ -65,10 +78,8 @@ END buildpattbl_pp;
 PROCEDURE newphys_pp(p_physician_record IN physician%ROWTYPE)
 AS 
 BEGIN
-	/*
-		If the value for Phys_ID is not in the Physician Table, a row is inserted 
-		using INSERT into the Physician Table with those values.  
-	*/
+	-- If the value for Phys_ID is not in the Physician Table, a row is inserted 
+	-- using INSERT into the Physician Table with those values.  
   INSERT INTO physician VALUES p_physician_record
   RETURNING phys_id, phys_fname, phys_lname, phys_phone, phys_specialty
   INTO rec_physician;
@@ -98,10 +109,82 @@ EXCEPTION
       COMMIT;	
 END newphys_pp;
 ------------------------------------------------------------------------
-/*
-	An overloaded functions name FindPatient which checks to see 
-  	if a patient is in the data base either by patient number.
-*/
+PROCEDURE newpatient_pp(p_patient_record IN patient%ROWTYPE)
+AS 
+BEGIN
+	-- If the value for Pat_Nbr is not in the Patient Table, a row is inserted 
+	-- using INSERT into the Patient Table with those values.  
+  INSERT INTO patient VALUES p_patient_record
+  RETURNING pat_nbr, pat_fname, pat_lname, pat_address, pat_city, pat_state, pat_zip, pat_room, pat_bed
+  INTO rec_patient;
+  DBMS_OUTPUT.PUT_LINE('Inserting into patient table with record using function newpatient_pp: ');
+  DBMS_OUTPUT.PUT_LINE('Patient Number: ' || rec_patient.pat_nbr);
+  DBMS_OUTPUT.PUT_LINE('Patient First Name: ' || rec_patient.pat_fname);
+  DBMS_OUTPUT.PUT_LINE('Patient Last Name: ' || rec_patient.pat_lname);
+  DBMS_OUTPUT.PUT_LINE('Patient Address: ' || rec_patient.pat_address);	
+  DBMS_OUTPUT.PUT_LINE('Patient City: ' || rec_patient.pat_city); 
+  DBMS_OUTPUT.PUT_LINE('Patient State: ' || rec_patient.pat_state);   
+  DBMS_OUTPUT.PUT_LINE('Patient Zip: ' || rec_patient.pat_zip);
+  DBMS_OUTPUT.PUT_LINE('Patient Room: ' || rec_patient.pat_room);
+  DBMS_OUTPUT.PUT_LINE('Patient Bed: ' || rec_patient.pat_bed);
+  DBMS_OUTPUT.PUT_LINE(' ');   
+  COMMIT;
+EXCEPTION 
+  WHEN e_DupPhysFound THEN 
+    -- If the value for Phys_ID is in the Physician Table, the values of the 
+    -- remaining columns are updated using UPDATE.	
+    UPDATE patient SET ROW = p_patient_record
+      WHERE pat_nbr = p_patient_record.pat_nbr
+      RETURNING pat_nbr, pat_fname, pat_lname, pat_address, pat_city, pat_state, pat_zip, pat_room, pat_bed
+  		INTO rec_patient;     
+      DBMS_OUTPUT.PUT_LINE('Updating patient table with record using function newpatient_pp: ');
+      DBMS_OUTPUT.PUT_LINE('Patient Number: ' || rec_patient.pat_nbr);
+      DBMS_OUTPUT.PUT_LINE('Patient First Name: ' || rec_patient.pat_fname);
+      DBMS_OUTPUT.PUT_LINE('Patient Last Name: ' || rec_patient.pat_lname);
+      DBMS_OUTPUT.PUT_LINE('Patient Address: ' || rec_patient.pat_address);	
+      DBMS_OUTPUT.PUT_LINE('Patient City: ' || rec_patient.pat_city); 
+      DBMS_OUTPUT.PUT_LINE('Patient State: ' || rec_patient.pat_state);   
+      DBMS_OUTPUT.PUT_LINE('Patient Zip: ' || rec_patient.pat_zip);
+      DBMS_OUTPUT.PUT_LINE('Patient Room: ' || rec_patient.pat_room);
+      DBMS_OUTPUT.PUT_LINE('Patient Bed: ' || rec_patient.pat_bed);
+      DBMS_OUTPUT.PUT_LINE(' ');  
+      COMMIT;	
+END newpatient_pp;
+------------------------------------------------------------------------
+PROCEDURE newtreatment_pp(p_trt_record IN treatment%ROWTYPE)
+AS 
+  CURSOR cursor_treatment IS
+    SELECT * 
+    FROM treatment;
+    
+    dup_trt_on_same_day EXCEPTION;
+BEGIN
+  FOR trt IN cursor_treatment LOOP
+    IF (trt.pat_nbr = p_trt_record.pat_nbr) AND (trt.trt_procedure = p_trt_record.trt_procedure) AND (trt.trt_date = p_trt_record.trt_date) THEN
+      RAISE dup_trt_on_same_day;
+    END IF;
+  END LOOP;
+	-- If the value for Pat_Nbr is not in the Patient Table, a row is inserted 
+	-- using INSERT into the Patient Table with those values.  
+  INSERT INTO treatment VALUES p_trt_record
+  RETURNING pat_nbr, phys_id, trt_procedure, trt_date
+  INTO rec_treatment;
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('Inserting into treatment table with record using function hospital.newtreatment_pp: ');
+  DBMS_OUTPUT.PUT_LINE('Patient Number: ' || rec_treatment.pat_nbr);
+  DBMS_OUTPUT.PUT_LINE('Physican ID: ' || rec_treatment.phys_id);
+  DBMS_OUTPUT.PUT_LINE('Treatment Procedure: ' || rec_treatment.trt_procedure);
+  DBMS_OUTPUT.PUT_LINE('Treatment Date: ' || rec_treatment.trt_date);	
+  DBMS_OUTPUT.PUT_LINE(' ');   	
+EXCEPTION 
+  WHEN dup_trt_on_same_day THEN
+      DBMS_OUTPUT.PUT_LINE('A treatment procedure cannot be given to a patient more than once on same day:');
+      DBMS_OUTPUT.PUT_LINE('Patient Number: ' || p_trt_record.pat_nbr);
+      DBMS_OUTPUT.PUT_LINE('Treatment Procedure: ' || p_trt_record.trt_procedure);
+      DBMS_OUTPUT.PUT_LINE('Treatment Date: ' || p_trt_record.trt_date);
+      DBMS_OUTPUT.PUT_LINE(' ');   
+END newtreatment_pp;
+------------------------------------------------------------------------
 FUNCTION find_patient_pp(p_pat_nbr IN patient.pat_nbr%TYPE) 
     RETURN BOOLEAN
 IS 
@@ -117,11 +200,7 @@ EXCEPTION
   WHEN NO_DATA_FOUND THEN 
     RETURN SQL%FOUND;
 END;
-------------------------------------------------------------------------
-/*
-	An overloaded functions name FindPatient which checks to see 
-  	if a patient is in the data base either by patient first and last name.
-*/
+
 FUNCTION find_patient_pp(p_pat_fname IN patient.pat_fname%TYPE,
                             p_pat_lname IN patient.pat_lname%TYPE)
     RETURN BOOLEAN
