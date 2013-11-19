@@ -1,0 +1,2 @@
+SELECT * 
+FROM BB_DDL_LOG;
