@@ -1,3 +1,10 @@
+/* 
+	COURSE: ITSE 1345
+	AUTHOR: Raul Zuniga
+	ASSIGNMENT: Lab 4 part 2		
+	Purpose: Construct a PL/SQL package named Hospital which operates on the Physician, 
+	Treatment, and Patient tables as you did in Lab 3 by creating your own tables.
+*/
 create or replace 
 PACKAGE hospital IS
 /*
@@ -26,6 +33,7 @@ PACKAGE hospital IS
   -- Record used to verify update or insert from newtreatment_pp
 	rec_treatment treatment%ROWTYPE;
   
+  -- One exception: Named e_DupPhysFound
   e_DupPhysFound EXCEPTION;
   PRAGMA EXCEPTION_INIT(e_DupPhysFound, -00001);
     
@@ -57,11 +65,12 @@ END hospital;
 create or replace 
 PACKAGE BODY hospital IS
 /*
- 	buildpattbl is a procedure which will build a table of all treatments
+ 	A procedure named BuildPatTbl,  which will build a table of all treatments
  	for all patients.  The table will be an OUT parameter. A second
  	IN OUT will be the number of rows return in the table.  The indexes
  	in the table will start at 1 and be incremented by 1.  For each treatment,
 	include pat_nbr, trt_procedure, phys_id, phys_name, and phys_specialty
+	in the table.
  */
 PROCEDURE buildpattbl_pp(po_pat_trt_table OUT t_pattrt) IS
 BEGIN
@@ -75,6 +84,13 @@ BEGIN
      FROM treatment t JOIN physician p USING (phys_id);
 END buildpattbl_pp;
 ------------------------------------------------------------------------
+/*
+	A procedure named NewPHys which inserts a new physician into the physician
+	table.  The input parameters are: Phys_ID, Phys_Name, Phys_Phone, and 
+	Phys_Specialty.  The procedure should check to see if the physician is
+	already in the table.  If he/she is in the table, raise the exception
+	e_DupPhysFound.  Do not check for any exceptions in this procedure.
+*/
 PROCEDURE newphys_pp(p_physician_record IN physician%ROWTYPE)
 AS 
 BEGIN
@@ -98,7 +114,8 @@ EXCEPTION
     UPDATE physician SET ROW = p_physician_record
       WHERE phys_id = p_physician_record.phys_id
       RETURNING phys_id, phys_fname, phys_lname, phys_phone, phys_specialty
-  		INTO rec_physician;     
+  		INTO rec_physician;    
+      DBMS_OUTPUT.PUT_LINE('e_DupPhysfound exception: value for Phys_Id is in the Physician table ');				 
       DBMS_OUTPUT.PUT_LINE('Updating physician table with record using function newphys_pp: ');		
       DBMS_OUTPUT.PUT_LINE('Physician ID: ' || rec_physician.phys_id);
       DBMS_OUTPUT.PUT_LINE('Physican First Name: ' || rec_physician.phys_fname);
@@ -185,6 +202,13 @@ EXCEPTION
       DBMS_OUTPUT.PUT_LINE(' ');   
 END newtreatment_pp;
 ------------------------------------------------------------------------
+/*
+	Two overload functions, both named FindPatient, to check to see if a
+	patient is in the database either by patient number or name. That is, 
+	the input value could be either the patient number or name.  RETURN 
+	true, if the patient is found, FALSE if the patient is not found.
+*/
+
 FUNCTION find_patient_pp(p_pat_nbr IN patient.pat_nbr%TYPE) 
     RETURN BOOLEAN
 IS 

@@ -1,4 +1,7 @@
-/*
+/*	
+	COURSE: ITSE 1345
+	AUTHOR: Raul Zuniga
+	ASSIGNMENT: Lab 4 Part 1
 	PURPOSE: A procedure which will determine whether a given range of customers
    	has a purchase order or not.	         	 	
 	INPUT PARAMETERS: 1. The low Cust_ID value for the customer number range.

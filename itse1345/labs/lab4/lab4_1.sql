@@ -1,3 +1,15 @@
+/*
+	COURSE: ITSE 1345
+	AUTHOR: Raul Zuniga
+	ASSIGNMENT: Lab 4 part 1
+	Purpose:  Write a simple driver to call the procedure. 
+	Teste the following ranges of Cust_ids.
+	
+	- 90001 to 90008
+	- 90003 to 90007
+	- 90009 to 90010
+	- 900005 to 90004
+*/
 DECLARE
   lv_start_range1 INTEGER(5) := 90001;
   lv_end_range1 INTEGER(5) := 90008;
