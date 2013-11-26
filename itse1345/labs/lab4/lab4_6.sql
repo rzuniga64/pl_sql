@@ -17,6 +17,11 @@ INSERT INTO treatment(pat_nbr, phys_id, trt_procedure, trt_date)
   VALUES(3249, 101, '60-00', SYSDATE);
 COMMIT;
 
+-- Insert another row into the TREATMENT table  
+INSERT INTO treatment(pat_nbr, phys_id, trt_procedure, trt_date)
+  VALUES(3249, 101, '60-00', SYSDATE-1);
+COMMIT;
+
 -- Update a row in the TREATMENT table
 UPDATE treatment
   SET trt_procedure ='88-20'
@@ -26,6 +31,14 @@ UPDATE treatment
   AND trt_date = '25-MAR-99';
 COMMIT;
 
+-- Update another row in the TREATMENT table
+UPDATE treatment
+set trt_date ='11-OCT-2013'
+WHERE pat_nbr = 3249
+AND phys_id = 103
+AND trt_procedure = '88-20'
+AND trt_date = '22-JAN-99';
+
 -- Delete a row into the TREATMENT table
 DELETE FROM treatment
 WHERE PAT_NBR = 5116
@@ -34,10 +47,13 @@ AND TRT_PROCEDURE = '52-14'
 AND TRT_DATE = '03-APR-99';
 COMMIT;
 
--- Insert another row into the TREATMENT table  
---INSERT INTO treatment(pat_nbr, phys_id, trt_procedure, trt_date)
---  VALUES(3249, 101, '60-00', SYSDATE-1);
---COMMIT;
--- Update another row in the TREATMENT table
 -- Delete another row into the TREATMENT table 
+DELETE FROM treatment
+WHERE PAT_NBR = 5116
+AND PHYS_ID = 104
+AND TRT_PROCEDURE = '52-14'
+AND TRT_DATE = '05-FEB-01';
+COMMIT;
+
+
  
