@@ -1,0 +1,346 @@
+FIGURE 3-3 A SELECT statement
+
+DECLARE 
+  lv_qty_num NUMBER(3);
+BEGIN
+  SELECT SUM(quantity)
+    INTO lv_qty_num
+    FROM bb_basketitem
+    WHERE idBasket = 15;
+  DBMS_OUTPUT.PUT_LINE(lv_qty_num);
+END;
+
+FIGURE 3-5 A block for checking an uncompleted basket
+
+DECLARE
+  lv_created_date DATE;
+  lv_idbasket NUMBER(3);
+  lv_quantity NUMBER(3);
+  lv_subtotal NUMBER(5,2);
+  lv_days_num NUMBER(3);
+  lv_shopper_num NUMBER(3) := 25;
+BEGIN
+  SELECT idbasket, dtcreated, quantity, subtotal
+  INTO lv_idbasket, lv_created_date, lv_quantity, lv_subtotal
+  FROM bb_basket
+  WHERE idshopper = lv_shopper_num AND orderplaced = 0;
+  lv_days_num := SYSDATE - lv_created_date;
+  DBMS_OUTPUT.PUT_LINE(lv_idbasket || ' * ' || lv_created_date || ' * ' || lv_quantity || ' * ' || lv_subtotal || ' * ' || lv_days_num);
+END;
+
+An example of using %TYPE attribute
+
+DECLARE
+  lv_created_date bb_basket.dtcreated%TYPE;
+  lv_idbasket bb_basket.idbasket%TYPE;
+  lv_quantity bb_basket.quantity%TYPE;
+  lv_subtotal bb_basket.subtotal%TYPE;
+  lv_days_num NUMBER(3);
+  lv_shopper_num NUMBER(3) := 25;
+BEGIN
+  SELECT idbasket, dtcreated, quantity, subtotal
+  INTO lv_idbasket, lv_created_date, lv_quantity, lv_subtotal
+  FROM bb_basket
+  WHERE idshopper = lv_shopper_num AND orderplaced = 0;
+  lv_days_num := SYSDATE - lv_created_date;
+  DBMS_OUTPUT.PUT_LINE(lv_idbasket || ' * ' || lv_created_date || ' * ' || lv_quantity || ' * ' || lv_subtotal || ' * ' || lv_days_num);
+END;
+
+FIGURE 3-11 Retrieving state data to determine the tax amount
+
+DECLARE
+  lv_shipstate bb_basket.shipstate%TYPE;
+  lv_subtotal bb_basket.subtotal%TYPE;
+  lv_tax_num NUMBER(4,2) := 0;
+BEGIN
+  SELECT subtotal, shipstate
+    INTO lv_subtotal, lv_shipstate
+    FROM bb_basket
+    WHERE idbasket = 6;
+  IF lv_shipstate = 'VA' THEN 
+    lv_tax_num := lv_subtotal * 0.06;
+  END IF;
+  DBMS_OUTPUT.PUT_LINE('State: ' || lv_shipstate || ' Subtotal: ' || lv_subtotal || ' Tax: ' || lv_tax_num);
+  END;
+
+FIGURE 3-12 Including data retrieval and conditional IF processing in a block
+
+DECLARE
+  lv_shipstate bb_basket.shipstate%TYPE;
+  lv_subtotal bb_basket.subtotal%TYPE;
+  lv_tax_num NUMBER(4,2) := 0;
+BEGIN
+  SELECT subtotal, shipstate
+  INTO lv_subtotal, lv_shipstate
+  FROM bb_basket
+  WHERE idbasket = 4;
+
+  IF lv_shipstate = 'VA' THEN
+    lv_tax_num := lv_subtotal * 0.06;
+  ELSIF lv_shipstate = 'ME' THEN
+    lv_tax_num := lv_subtotal * 0.05;
+  ELSIF lv_shipstate = 'NY' THEN
+    lv_tax_num := lv_subtotal * 0.07;
+  ELSE 
+    lv_tax_num := lv_subtotal * 0.04;
+  END IF;
+  DBMS_OUTPUT.PUT_LINE('State: ' || lv_shipstate || ' Subtotal: ' || lv_subtotal || ' Tax: ' || lv_tax_num);
+  END;
+
+FIGURE 3-13 Including data retieval and conditional CASE processing in a block
+	
+DECLARE
+  lv_shipstate bb_basket.shipstate%TYPE;
+  lv_subtotal bb_basket.subtotal%TYPE;
+  lv_tax_num NUMBER(4,2) := 0;
+BEGIN
+  SELECT subtotal, shipstate
+  INTO lv_subtotal, lv_shipstate
+  FROM bb_basket
+  WHERE idbasket = 4;
+
+  CASE lv_shipstate
+    WHEN 'VA' THEN lv_tax_num := lv_subtotal * 0.06;
+    WHEN 'ME' THEN lv_tax_num := lv_subtotal * 0.05;
+    WHEN 'NY' THEN lv_tax_num := lv_subtotal * 0.07;
+    ELSE lv_tax_num := lv_subtotal * 0.04;
+  END CASE;
+  DBMS_OUTPUT.PUT_LINE('State: ' || lv_shipstate || ' Subtotal: ' || lv_subtotal || ' Tax: ' || lv_tax_num);
+  END;
+
+FIGURE 3-14 Performing an INSERT in a block
+
+DECLARE 
+  lv_firstname bb_shopper.firstname%TYPE := 'Jeffrey';
+  lv_lastname bb_shopper.lastname%TYPE := 'Brand';
+  lv_email bb_shopper.email%TYPE := 'jbrand@site.com';
+BEGIN
+  INSERT INTO bb_shopper(idshopper, firstname, lastname, email)
+    VALUES (bb_shopper_seq.NEXTVAL, lv_firstname, lv_lastname, lv_email);
+  COMMIT;
+END;
+
+DECLARE
+  lv_shipstate bb_basket.shipstate%TYPE;
+  lv_subtotal bb_basket.subtotal%TYPE;
+  lv_tax_num NUMBER(4,2) := 0;
+BEGIN
+  SELECT subtotal, shipstate
+  INTO lv_subtotal, lv_shipstate
+  FROM bb_basket
+  WHERE idbasket = 4;
+
+  CASE lv_shipstate 
+    WHEN 'VA' THEN 
+      lv_tax_num := lv_subtotal * 0.06;
+    WHEN 'ME' THEN
+      lv_tax_num := lv_subtotal * 0.05;
+    WHEN 'NY' THEN
+      lv_tax_num := lv_subtotal * 0.07;
+    ELSE 
+      lv_tax_num := lv_subtotal * 0.04;
+  END CASE;
+  DBMS_OUTPUT.PUT_LINE('State: ' || lv_shipstate || ' Subtotal: ' || lv_subtotal || ' Tax: ' || lv_tax_num);
+  END;
+
+FIGURE 3-15 Verifying that a DML statement was processed correctly
+
+SELECT idshopper, firstname, lastname, email
+FROM bb_shopper
+WHERE lastname = 'Brand';
+
+ IDSHOPPER FIRSTNAME       LASTNAME             EMAIL                   
+---------- --------------- -------------------- -------------------------
+        30 Jeffrey         Brand                jbrand@site.com    
+
+FIGURE 3-16 Verifying existing data
+
+SELECT idbasket, orderplaced
+FROM bb_basket
+WHERE idbasket = 14;
+
+  IDBASKET ORDERPLACED
+---------- -----------
+        14           0 
+       
+FIGURE 3-17 Performing an UPDATE in a block
+
+DECLARE
+  lv_idbasket bb_basket.idbasket%TYPE :=14;
+BEGIN
+  UPDATE bb_basket
+  SET orderplaced = 1
+  WHERE idbasket = lv_idbasket;
+  COMMIT;
+END;
+
+FIGURE 3-18 Verifying data after an UPDATE
+
+SELECT idbasket, orderplaced
+FROM bb_basket
+WHERE idbasket = 14;
+
+  IDBASKET ORDERPLACED
+---------- -----------
+        14           1 
+
+FIGURE 3-19 Declaring a record variable
+
+DECLARE
+  TYPE type_basket IS RECORD(
+    basket bb_basket.idbasket%TYPE,
+    created bb_basket.dtcreated%TYPE,
+    qty bb_basket.quantity%TYPE,
+    sub bb_basket.subtotal%TYPE);
+  rec_basket type_basket;
+  lv_days_num NUMBER(3);
+  lv_shopper_num NUMBER(3) := 25;
+BEGIN
+  SELECT idbasket, dtcreated, quantity, subtotal
+  INTO rec_basket
+  FROM bb_basket
+  WHERE idshopper = lv_shopper_num AND orderplaced = 0;
+  lv_days_num := SYSDATE - rec_basket.created;
+  dbms_output.put_line(rec_basket.basket || '*' || rec_basket.created || '*' || rec_basket.qty || '*' || rec_basket.sub || '*' || lv_days_num);
+END; 
+
+Declaring a ROWTYPE variable 
+
+DECLARE 
+  rec_shopper bb_shopper%ROWTYPE;
+BEGIN
+  SELECT *
+  INTO rec_shopper
+  FROM bb_shopper
+  WHERE idshopper = 25;
+  DBMS_OUTPUT.PUT_LINE(rec_shopper.lastname);
+  DBMS_OUTPUT.PUT_LINE(rec_shopper.address);
+  DBMS_OUTPUT.PUT_LINE(rec_shopper.email);
+END;
+
+FIGURE 3-20 Adding an INSERT statement with a record value
+
+DECLARE
+  rec_dept bb_department%ROWTYPE;
+BEGIN
+  rec_dept.iddepartment := 4;
+  rec_dept.deptname := 'Teas';
+  rec_dept.deptdesc := 'Premium teas';
+  DBMS_OUTPUT.PUT_LINE(rec_dept.deptname);
+  INSERT INTO bb_department
+    VALUES rec_dept;
+END;
+
+FIGURE 3-21 An UPDATE with a record variable
+
+DECLARE
+  rec_dept bb_department%ROWTYPE;
+BEGIN
+  rec_dept.iddepartment := 4;
+  rec_dept.deptdesc := 'Premium teas from around the world';
+  rec_dept.deptimage := 'tea.gif';
+  UPDATE bb_department SET ROW = rec_dept
+    WHERE iddepartment = rec_dept.iddepartment;
+END;
+
+FIGURE 3-24 Using an associative array
+
+DECLARE
+  --Associative array data type declaration
+  TYPE type_roast IS TABLE OF NUMBER
+  INDEX BY BINARY_INTEGER;
+  
+  --Associative array variable declaration
+  tbl_roast type_roast; 
+  
+  lv_tot_num NUMBER := 0;
+  lv_cnt_num NUMBER := 0;
+  lv_avg_num NUMBER;
+  lv_samp1_num NUMBER(5,2) := 6.22;
+  lv_samp2_num NUMBER(5,2) := 6.13;
+  lv_samp3_num NUMBER(5,2) := 6.27;
+  lv_samp4_num NUMBER(5,2) := 6.16;
+  lv_samp5_num NUMBER(5,2);
+BEGIN
+  --Put initialized variable values in the table variable.
+  tbl_roast(1) := lv_samp1_num;
+  tbl_roast(2) := lv_samp2_num;
+  tbl_roast(3) := lv_samp3_num;
+  tbl_roast(4) := lv_samp4_num;
+  tbl_roast(5) := lv_samp5_num;
+  
+  /* A FOR loop adds all the sample measurements that
+     have been entered in teh table variable */
+  FOR i IN 1..tbl_roast.COUNT LOOP
+    IF tbl_roast(i) IS NOT NULL THEN 
+      lv_tot_num := lv_tot_num + tbl_roast(i);
+      lv_cnt_num := lv_cnt_num + 1;
+    END IF;
+  END LOOP;
+  
+  --lv_avg_num calculates the average measurement
+  lv_avg_num := lv_tot_num / lv_cnt_num;
+  dbms_output.put_line(lv_tot_num);
+  dbms_output.put_line(lv_cnt_num);
+  dbms_output.put_line(tbl_roast.COUNT);
+  dbms_output.put_line(lv_avg_num);  
+END;
+
+FIGURE 3-26 Using a table of records variable
+  
+/* 
+  As a shpper is perusing the Brewbean site and selecting items to 
+  purchase, the Brewbean's application needs a variable to hold 
+  information on all items selected so far in the basket until the 
+  shopper indicates saving the basket for completion later or 
+  finishing the purchase (at which time data is inserted into the database.
+  
+  You need a variable that holds data similar to a row of the BB_BASKETITEM
+  table.  In addition the shopper might select more than one item, so the
+  variable must be able to handle more than on row of data.
+*/
+DECLARE
+  --Table of records data type declaration
+  TYPE type_basketitems IS TABLE OF bb_basketitem%ROWTYPE
+  INDEX BY BINARY_INTEGER;
+  --Table of records variable declaration
+  tbl_items type_basketitems;
+  --Adding application data to the table of records variable
+  lv_ind_num NUMBER(3) :=1;
+  lv_id_num bb_basketitem.idproduct%TYPE := 7;
+  lv_price_num bb_basketitem.price%TYPE := 10.80;
+  lv_qty_num bb_basketitem.quantity%TYPE := 2;
+  lv_opt1_num bb_basketitem.option1%TYPE := 2;
+  lv_opt2_num bb_basketitem.option2%TYPE := 3;
+BEGIN
+  tbl_items(lv_ind_num).idproduct := lv_id_num;
+  tbl_items(lv_ind_num).price := lv_price_num;
+  tbl_items(lv_ind_num).quantity := lv_qty_num;  
+  tbl_items(lv_ind_num).option1 := lv_opt1_num;
+  tbl_items(lv_ind_num).option2 := lv_opt2_num;
+  --Display values to determine whether code is processing correctly
+  DBMS_OUTPUT.PUT_LINE(lv_ind_num); 
+  DBMS_OUTPUT.PUT_LINE(tbl_items(lv_ind_num).idproduct);
+  DBMS_OUTPUT.PUT_LINE(tbl_items(lv_ind_num).price);
+  DBMS_OUTPUT.PUT_LINE(tbl_items(lv_ind_num).quantity);
+  DBMS_OUTPUT.PUT_LINE(tbl_items(lv_ind_num).option1);
+  DBMS_OUTPUT.PUT_LINE(tbl_items(lv_ind_num).option2);  
+END;
+
+FIGURE 3-28 Using a BULK COLLECT option
+
+DECLARE
+  TYPE type_product IS TABLE OF bb_product%ROWTYPE
+    INDEX BY PLS_INTEGER;
+  tb1_prod type_product;
+BEGIN
+  SELECT * BULK COLLECT INTO tb1_prod
+  FROM bb_product
+  WHERE type = 'E';
+  
+  FOR i IN 1..tb1_prod. COUNT LOOP
+    DBMS_OUTPUT.PUT_LINE(tb1_prod(i).productname);
+  END LOOP;
+END;
+
+
