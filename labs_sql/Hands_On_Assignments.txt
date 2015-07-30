@@ -1,0 +1,315 @@
+Assigment 1-1
+
+2.	select idproduct, productname, price, active, type, iddepartment stock
+	from bb_product;
+
+IDPRODUCT PRODUCTNAME                    PRICE     ACTIVE TYPE      STOCK
+---------- ------------------------- ---------- ---------- ---- ----------
+         1 CapressoBar Model #351         99.99          1 E             2 
+         2 Capresso Ultima               129.99          1 E             2 
+         3 Eileen 4-cup French Press       32.5          1 E             2 
+         4 Coffee Grinder                  28.5          1 E             2 
+         5 Sumatra                         10.5          1 C             1 
+         6 Guatamala                         10          1 C             1 
+         7 Columbia                        10.8          1 C             1 
+         8 Brazil                          10.8          1 C             1 
+         9 Ethiopia                          10          1 C             1 
+        10 Espresso                          10          1 C             1 
+
+3.	select idshopper, b.idbasket, b.orderplaced, b.dtordered, b.dtcreated
+	from bb_shopper s join bb_basket b using(idshopper);
+
+IDSHOPPER   IDBASKET ORDERPLACED DTORDERED DTCREATED
+---------- ---------- ----------- --------- ---------
+        21          3           1 23-JAN-12 23-JAN-12 
+        21          4           1 12-FEB-12 12-FEB-12 
+        22          5           1 19-FEB-12 19-FEB-12 
+        22          6           1 01-MAR-12 01-MAR-12 
+        23          7           1 26-JAN-12 26-JAN-12 
+        23          8           1 16-FEB-12 16-FEB-12 
+        23          9           1 02-MAR-12 02-MAR-12 
+        24         10           1 07-FEB-12 07-FEB-12 
+        24         11           1 27-FEB-12 27-FEB-12 
+        25         12           0 19-FEB-12 19-FEB-12 
+        26         13           0           09-FEB-12 
+        26         14           0           10-FEB-12 
+        27         15           0           14-FEB-12 
+        27         16           0           24-FEB-12 
+
+4.	select idproduct, p.productname, pc.categoryname, pd.optionname
+	from bb_product p join bb_productoption using(idproduct)
+	join bb_productoptiondetail pd using(idoption)
+	join bb_productoptioncategory pc using(idoptioncategory);
+
+IDPRODUCT PRODUCTNAME               CATEGORYNAME              OPTIONNAME              
+---------- ------------------------- ------------------------- -------------------------
+         5 Sumatra                   Size                      1/2 LB.                   
+         5 Sumatra                   Size                      1 LB.                     
+         5 Sumatra                   Form                      Whole Bean                
+         5 Sumatra                   Form                      Regular Grind             
+         6 Guatamala                 Size                      1/2 LB.                   
+         6 Guatamala                 Size                      1 LB.                     
+         6 Guatamala                 Form                      Whole Bean                
+         6 Guatamala                 Form                      Regular Grind             
+         7 Columbia                  Size                      1/2 LB.                   
+         7 Columbia                  Size                      1 LB.                     
+         7 Columbia                  Form                      Whole Bean                
+         7 Columbia                  Form                      Regular Grind             
+         8 Brazil                    Size                      1/2 LB.                   
+         8 Brazil                    Size                      1 LB.                     
+         8 Brazil                    Form                      Whole Bean                
+         8 Brazil                    Form                      Regular Grind             
+         9 Ethiopia                  Size                      1/2 LB.                   
+         9 Ethiopia                  Size                      1 LB.                     
+         9 Ethiopia                  Form                      Whole Bean                
+         9 Ethiopia                  Form                      Regular Grind             
+        10 Espresso                  Size                      1/2 LB.                   
+        10 Espresso                  Size                      1 LB.                     
+        10 Espresso                  Form                      Whole Bean                
+        10 Espresso                  Form                      Regular Grind         
+
+Next, you write and run your own SQL statements
+
+1. Product an unduplicated list of all product IDs for all products that have been sold.  Sort the list.
+
+select idproduct "Product ID", productname "Product Name", sum(b.quantity) "Quantity of product sold"
+from bb_product join bb_basketitem b using(idproduct)
+join bb_basket using(idbasket)
+group by idproduct, productname
+order by idproduct;
+
+Product ID Product Name              Quantity of product sold
+---------- ------------------------- ------------------------
+         2 Capresso Ultima                                  3 
+         4 Coffee Grinder                                   4 
+         6 Guatamala                                       13 
+         7 Columbia                                        21 
+         8 Brazil                                          27 
+         9 Ethiopia                                        14 
+        10 Espresso                                         7 
+
+2. show the basket ID, product ID, product name, and description for all items ordered. 
+(Do it two ways-one with an ANSI join and one with a traditional join).
+
+TRADITIONAL JOIN
+
+select b.idbasket, p.idproduct, productname, description
+from bb_product p, bb_basketitem bi, bb_basket b
+where p.idproduct = bi.idproduct
+and bi.idbasket = b.idbasket;
+
+ANSI JOIN
+
+select idbasket, idproduct, productname, description
+from bb_product p join bb_basketitem bi using (idproduct)
+join bb_basket b using(idbasket)
+
+  IDBASKET  IDPRODUCT PRODUCTNAME               DESCRIPTION                                                                                        
+---------- ---------- ------------------------- ----------------------------------------------------------------------------------------------------
+         3          6 Guatamala                 heavy body, spicy twist, aromatic and smokey flavor.                                                 
+         3          8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+         4          4 Coffee Grinder            Avoid blade grinders! This mill grinder allows you to choose a fine grind to a coarse grind.         
+         5          7 Columbia                  dry, nutty flavor and smoothness                                                                     
+         5          8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+         5          9 Ethiopia                  distinctive berry-like flavor and aroma, reminds many of a fruity, memorable wine.                   
+         5         10 Espresso                  dense, caramel-like sweetness with a soft acidity. Roasted somewhat darker than traditional Italian. 
+         6         10 Espresso                  dense, caramel-like sweetness with a soft acidity. Roasted somewhat darker than traditional Italian. 
+         6          2 Capresso Ultima           Coffee and Espresso and Cappuccino Machine. Brews from one espresso to two six ounce cups of coffee  
+         7          7 Columbia                  dry, nutty flavor and smoothness                                                                     
+         7          8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+         8          7 Columbia                  dry, nutty flavor and smoothness                                                                     
+         8          8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+         9          7 Columbia                  dry, nutty flavor and smoothness                                                                     
+         9          8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+        10          6 Guatamala                 heavy body, spicy twist, aromatic and smokey flavor.                                                 
+        10          8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+        10          4 Coffee Grinder            Avoid blade grinders! This mill grinder allows you to choose a fine grind to a coarse grind.         
+        11          9 Ethiopia                  distinctive berry-like flavor and aroma, reminds many of a fruity, memorable wine.                   
+        12          8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+        12          9 Ethiopia                  distinctive berry-like flavor and aroma, reminds many of a fruity, memorable wine.                   
+        12          6 Guatamala                 heavy body, spicy twist, aromatic and smokey flavor.                                                 
+        12          7 Columbia                  dry, nutty flavor and smoothness                                                                     
+        13          9 Ethiopia                  distinctive berry-like flavor and aroma, reminds many of a fruity, memorable wine.                   
+        15          8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+        15          7 Columbia                  dry, nutty flavor and smoothness                                                                     
+        16          8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+        16          7 Columbia                  dry, nutty flavor and smoothness    
+
+3. Modify the queries in Step 2 to include the customer's last name.
+  
+TRADITIONAL JOIN
+   
+select b.idbasket, s.lastname, p.idproduct, productname, description
+from bb_product p, bb_basketitem bi, bb_basket b, bb_shopper s
+where p.idproduct = bi.idproduct
+and bi.idbasket = b.idbasket
+and b.idshopper = s.idshopper
+order by s.lastname; 
+
+ANSI JOIN
+
+select idbasket,lastname, idproduct, productname, description
+from bb_product join bb_basketitem using (idproduct)
+join bb_basket using(idbasket)
+join bb_shopper using(idshopper)
+order by lastname;   
+
+ IDBASKET LASTNAME              IDPRODUCT PRODUCTNAME               DESCRIPTION                                                                                        
+---------- -------------------- ---------- ------------------------- ----------------------------------------------------------------------------------------------------
+         3 Carter                        8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+         4 Carter                        4 Coffee Grinder            Avoid blade grinders! This mill grinder allows you to choose a fine grind to a coarse grind.         
+         3 Carter                        6 Guatamala                 heavy body, spicy twist, aromatic and smokey flavor.                                                 
+        13 Cast                          9 Ethiopia                  distinctive berry-like flavor and aroma, reminds many of a fruity, memorable wine.                   
+        16 Parker                        8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+        15 Parker                        8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+        16 Parker                        7 Columbia                  dry, nutty flavor and smoothness                                                                     
+        15 Parker                        7 Columbia                  dry, nutty flavor and smoothness                                                                     
+         7 Ratman                        7 Columbia                  dry, nutty flavor and smoothness                                                                     
+         8 Ratman                        7 Columbia                  dry, nutty flavor and smoothness                                                                     
+         9 Ratman                        7 Columbia                  dry, nutty flavor and smoothness                                                                     
+         8 Ratman                        8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+         9 Ratman                        8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+         7 Ratman                        8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+        12 Savid                         7 Columbia                  dry, nutty flavor and smoothness                                                                     
+        12 Savid                         8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+        12 Savid                         6 Guatamala                 heavy body, spicy twist, aromatic and smokey flavor.                                                 
+        12 Savid                         9 Ethiopia                  distinctive berry-like flavor and aroma, reminds many of a fruity, memorable wine.                   
+         5 Somner                        8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+         5 Somner                        7 Columbia                  dry, nutty flavor and smoothness                                                                     
+         6 Somner                        2 Capresso Ultima           Coffee and Espresso and Cappuccino Machine. Brews from one espresso to two six ounce cups of coffee  
+         6 Somner                       10 Espresso                  dense, caramel-like sweetness with a soft acidity. Roasted somewhat darker than traditional Italian. 
+         5 Somner                       10 Espresso                  dense, caramel-like sweetness with a soft acidity. Roasted somewhat darker than traditional Italian. 
+         5 Somner                        9 Ethiopia                  distinctive berry-like flavor and aroma, reminds many of a fruity, memorable wine.                   
+        11 Sonnie                        9 Ethiopia                  distinctive berry-like flavor and aroma, reminds many of a fruity, memorable wine.                   
+        10 Sonnie                        4 Coffee Grinder            Avoid blade grinders! This mill grinder allows you to choose a fine grind to a coarse grind.         
+        10 Sonnie                        6 Guatamala                 heavy body, spicy twist, aromatic and smokey flavor.                                                 
+        10 Sonnie                        8 Brazil                    well-balanced mellow flavor, a medium body with hints of cocoa and a mild, nut-like aftertaste       
+
+4. Display all orders (basketID, shopperID, and dates ordered) placed 
+in February, 2012. The date should be displayed in this format: February 12, 2012.
+
+select idbasket "Basket ID", idshopper "Shopper ID", to_char(dtcreated, 'MONTH DD, YYYY') "Date Ordered" 
+from bb_shopper join bb_basket using(idshopper)
+where dtcreated between '01-FEB-12' and '29-FEB-12'
+
+ Basket ID Shopper ID Date Ordered     
+---------- ---------- ------------------
+         4         21 FEBRUARY  12, 2012 
+         5         22 FEBRUARY  19, 2012 
+         8         23 FEBRUARY  16, 2012 
+        10         24 FEBRUARY  07, 2012 
+        11         24 FEBRUARY  27, 2012 
+        12         25 FEBRUARY  19, 2012 
+        13         26 FEBRUARY  09, 2012 
+        14         26 FEBRUARY  10, 2012 
+        15         27 FEBRUARY  14, 2012 
+        16         27 FEBRUARY  24, 2012 
+
+5. display the total quantity sold by product ID.
+
+select idproduct, sum(b.quantity)
+from bb_basketitem join bb_basket b using(idbasket)
+group by idproduct
+order by idproduct;
+
+Product ID Quantity Sold
+---------- -------------
+         2             3 
+         4             4 
+         6            13 
+         7            21 
+         8            27 
+         9            14 
+        10             7 
+
+6. Modify the query in Step 5 to show only products that have sold 
+less than a quantity of 3.
+
+select idproduct "Product ID", b.quantity "Quantity Sold"
+from bb_basketitem join bb_basket b using(idbasket)
+where b.quantity < 3
+order by idproduct;
+
+Product ID Quantity Sold
+---------- -------------
+         4             1 
+         7             2 
+         7             2 
+         7             2 
+         7             2 
+         7             2 
+         8             2 
+         8             2 
+         8             2 
+         8             2 
+         8             2 
+         9             1 
+         9             2 
+
+7. List all active coffee products (product ID, name, and price) for all coffee items
+priced above the overall average of coffee items.
+
+select idproduct "Product ID", productname "Product Name", price "Price"
+from bb_product
+where type='C' and price > (select avg(price) from bb_product where type='C');
+
+Product ID Product Name                   Price
+---------- ------------------------- ----------
+         5 Sumatra                         10.5 
+         7 Columbia                        10.8 
+         8 Brazil                          10.8 
+
+8. Create a table named CONTACTS that includes the following columns:
+
+create table contacts (
+  Con_id        NUMBER(4),
+  Company_name  VARCHAR2(30),
+  Email        VARCHAR2(30),
+  Last_date     DATE,
+  Con_cnt       NUMBER(3),
+  CONSTRAINT con_id_pk PRIMARY KEY(Con_id)
+  );
+
+DESC CONTACTS;
+
+Name         Null     Type         
+------------ -------- ------------ 
+CON_ID       NOT NULL NUMBER(4)    
+COMPANY_NAME          VARCHAR2(30) 
+EMAIL                 VARCHAR2(30) 
+LAST_DATE             DATE         
+CON_CNT               NUMBER(3)  
+
+9. Add two rows of data to the table, using data values you create.  Make sure the
+default option on the LAST_DATE column is used in the second row added.  Also, issue
+a command to save the data in the table permanently.
+
+insert into contacts
+  values(1, 'Nokia', 'nokia@nokia.com', '01-JAN-12', 1);
+insert into contacts
+  values(2, 'HP', 'hp@hp.com', sysdate, 2);
+commit;
+
+    CON_ID COMPANY_NAME                   EMAIL                          LAST_DATE    CON_CNT
+---------- ------------------------------ ------------------------------ --------- ----------
+         1 Nokia                          nokia@nokia.com                01-JAN-12          1 
+         2 HP                             hp@hp.com                      02-SEP-13 
+
+10. Issue a command to change the e-mail value for the first row added to the table.
+show a query on the table to confirm that the change was completed.  then issue a 
+command to undo the change. 
+
+update contacts
+  set email = 'acc@austincc.edu'
+  where con_id = 1;
+  
+select * from contacts;
+
+    CON_ID COMPANY_NAME                   EMAIL                          LAST_DATE    CON_CNT
+---------- ------------------------------ ------------------------------ --------- ----------
+         1 Nokia                          acc@austincc.edu               01-JAN-12          1 
+         2 HP                             hp@hp.com                      02-SEP-13          2 
+
+
+Assignment 1-4
+
