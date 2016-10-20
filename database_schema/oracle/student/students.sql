@@ -26,67 +26,42 @@ CREATE TABLE students (
   current_credits  NUMBER(3)
   );
 
-INSERT INTO students (id, first_name, last_name, major,
-                      current_credits)
-  VALUES (student_sequence.NEXTVAL, 'Scott', 'Smith',
-          'Computer Science', 11);
+INSERT INTO students (id, first_name, last_name, major, current_credits)
+  VALUES (student_sequence.NEXTVAL, 'Scott', 'Smith', 'Computer Science', 11);
 
-INSERT INTO students (id, first_name, last_name, major,
-                      current_credits)
-  VALUES (student_sequence.NEXTVAL, 'Margaret', 'Mason',
-          'History', 4);
+INSERT INTO students (id, first_name, last_name, major, current_credits)
+  VALUES (student_sequence.NEXTVAL, 'Margaret', 'Mason', 'History', 4);
 
-INSERT INTO students (id, first_name, last_name, major,
-                       current_credits)
-  VALUES (student_sequence.NEXTVAL, 'Joanne', 'Junebug',
-           'Computer Science', 8);
+INSERT INTO students (id, first_name, last_name, major, current_credits)
+  VALUES (student_sequence.NEXTVAL, 'Joanne', 'Junebug', 'Computer Science', 8);
 
-INSERT INTO students (id, first_name, last_name, major,
-                       current_credits)
-  VALUES (student_sequence.NEXTVAL, 'Manish', 'Murgatroid',
-           'Economics', 8);
+INSERT INTO students (id, first_name, last_name, major, current_credits)
+  VALUES (student_sequence.NEXTVAL, 'Manish', 'Murgatroid',  'Economics', 8);
 
-INSERT INTO students(id, first_name, last_name, major,
-                       current_credits)
-  VALUES(student_sequence.NEXTVAL, 'Patrick', 'Poll',
-           'History', 4);
+INSERT INTO students(id, first_name, last_name, major, current_credits)
+  VALUES(student_sequence.NEXTVAL, 'Patrick', 'Poll', 'History', 4);
 
-INSERT INTO students(id, first_name, last_name, major,
-                       current_credits)
-  VALUES (student_sequence.NEXTVAL, 'Timothy', 'Taller',
-           'History', 4);
+INSERT INTO students(id, first_name, last_name, major, current_credits)
+  VALUES (student_sequence.NEXTVAL, 'Timothy', 'Taller', 'History', 4);
 
-INSERT INTO students(id, first_name, last_name, major,
-                       current_credits)
-  VALUES (student_sequence.NEXTVAL, 'Barbara', 'Blues',
-           'Economics', 7);
+INSERT INTO students(id, first_name, last_name, major, current_credits)
+  VALUES (student_sequence.NEXTVAL, 'Barbara', 'Blues', 'Economics', 7);
 
-INSERT INTO students(id, first_name, last_name, major,
-                       current_credits)
-  VALUES (student_sequence.NEXTVAL, 'David', 'Dinsmore',
-           'Music', 4);
+INSERT INTO students(id, first_name, last_name, major, current_credits)
+  VALUES (student_sequence.NEXTVAL, 'David', 'Dinsmore', 'Music', 4);
 
-INSERT INTO students(id, first_name, last_name, major,
-                       current_credits)
-  VALUES (student_sequence.NEXTVAL, 'Ester', 'Elegant',
-           'Nutrition', 8);
+INSERT INTO students(id, first_name, last_name, major, current_credits)
+  VALUES (student_sequence.NEXTVAL, 'Ester', 'Elegant', 'Nutrition', 8);
 
-INSERT INTO students(id, first_name, last_name, major,
-                       current_credits)
-  VALUES (student_sequence.NEXTVAL, 'Rose', 'Riznit',
-           'Music', 7);
+INSERT INTO students(id, first_name, last_name, major, current_credits)
+  VALUES (student_sequence.NEXTVAL, 'Rose', 'Riznit', 'Music', 7);
 
-INSERT INTO STUDENTS(id, first_name, last_name, major,
-                       current_credits)
-  VALUES (student_sequence.NEXTVAL, 'Rita', 'Razmataz',
-           'Nutrition', 8);
+INSERT INTO STUDENTS(id, first_name, last_name, major, current_credits)
+  VALUES (student_sequence.NEXTVAL, 'Rita', 'Razmataz', 'Nutrition', 8);
 
-INSERT INTO students(id, first_name, last_name, major,
-                        current_credits)
-  VALUES (student_sequence.NEXTVAL, 'Shay', 'Shariatpanahy',
-           'Computer Science', 3);
+INSERT INTO students(id, first_name, last_name, major, current_credits)
+  VALUES (student_sequence.NEXTVAL, 'Shay', 'Shariatpanahy', 'Computer Science', 3);
 
-PROMPT major_stats...
 DROP TABLE major_stats;
 
 CREATE TABLE major_stats (
@@ -127,51 +102,32 @@ CREATE TABLE rooms (
   description      VARCHAR2(50)
   );
 
-INSERT INTO rooms (room_id, building, room_number, number_seats,
-                   description)
-  VALUES (room_sequence.NEXTVAL, 'Building 7', 201, 1000,
-          'Large Lecture Hall');
+INSERT INTO rooms (room_id, building, room_number, number_seats, description)
+  VALUES (room_sequence.NEXTVAL, 'Building 7', 201, 1000, 'Large Lecture Hall');
 
-INSERT INTO rooms (room_id, building, room_number, number_seats,
-                   description)
-  VALUES (room_sequence.NEXTVAL, 'Building 6', 101, 500,
-          'Small Lecture Hall');
+INSERT INTO rooms (room_id, building, room_number, number_seats, description)
+  VALUES (room_sequence.NEXTVAL, 'Building 6', 101, 500, 'Small Lecture Hall');
 
-INSERT INTO rooms (room_id, building, room_number, number_seats,
-                   description)
-  VALUES (room_sequence.NEXTVAL, 'Building 6', 150, 50,
-          'Discussion Room A');
+INSERT INTO rooms (room_id, building, room_number, number_seats, description)
+  VALUES (room_sequence.NEXTVAL, 'Building 6', 150, 50,'Discussion Room A');
 
-INSERT INTO rooms (room_id, building, room_number, number_seats,
-                   description)
-  VALUES (room_sequence.NEXTVAL, 'Building 6', 160, 50,
-          'Discussion Room B');
+INSERT INTO rooms (room_id, building, room_number, number_seats, description)
+  VALUES (room_sequence.NEXTVAL, 'Building 6', 160, 50,'Discussion Room B');
 
-INSERT INTO rooms (room_id, building, room_number, number_seats,
-                   description)
-  VALUES (room_sequence.NEXTVAL, 'Building 6', 170, 50,
-         'Discussion Room C');
+INSERT INTO rooms (room_id, building, room_number, number_seats, description)
+  VALUES (room_sequence.NEXTVAL, 'Building 6', 170, 50, 'Discussion Room C');
 
-INSERT INTO rooms (room_id, building, room_number, number_seats,
-                   description)
-  VALUES (room_sequence.NEXTVAL, 'Music Building', 100, 10,
-         'Music Practice Room');
+INSERT INTO rooms (room_id, building, room_number, number_seats, description)
+  VALUES (room_sequence.NEXTVAL, 'Music Building', 100, 10, 'Music Practice Room');
 
-INSERT INTO rooms (room_id, building, room_number, number_seats,
-                   description)
-  VALUES (room_sequence.NEXTVAL, 'Music Building', 200, 1000,
-          'Concert Room');
+INSERT INTO rooms (room_id, building, room_number, number_seats, description)
+  VALUES (room_sequence.NEXTVAL, 'Music Building', 200, 1000, 'Concert Room');
 
-INSERT INTO rooms (room_id, building, room_number, number_seats,
-                   description)
-  VALUES (room_sequence.NEXTVAL, 'Building 7', 300, 75,
-          'Discussion Room D');
+INSERT INTO rooms (room_id, building, room_number, number_seats, description)
+  VALUES (room_sequence.NEXTVAL, 'Building 7', 300, 75, 'Discussion Room D');
 
-INSERT INTO rooms (room_id, building, room_number, number_seats,
-                   description)
-  VALUES (room_sequence.NEXTVAL, 'Building 7', 310, 50,
-          'Discussion Room E');
-
+INSERT INTO rooms (room_id, building, room_number, number_seats, description)
+  VALUES (room_sequence.NEXTVAL, 'Building 7', 310, 50, 'Discussion Room E');
 
 PROMPT classes table...
 DROP TABLE classes CASCADE CONSTRAINTS;
@@ -190,40 +146,31 @@ CREATE TABLE classes (
     FOREIGN KEY (room_id) REFERENCES rooms (room_id)
   );
 
-INSERT INTO classes(department, course, description, max_students,
-                     current_students, num_credits, room_id)
+INSERT INTO classes(department, course, description, max_students, current_students, num_credits, room_id)
   VALUES ('HIS', 101, 'History 101', 30, 11, 4, 20000);
 
-INSERT INTO classes(department, course, description, max_students,
-                     current_students, num_credits, room_id)
+INSERT INTO classes(department, course, description, max_students, current_students, num_credits, room_id)
   VALUES ('HIS', 301, 'History 301', 30, 0, 4, 20004);
 
-INSERT INTO classes(department, course, description, max_students,
-                     current_students, num_credits, room_id)
+INSERT INTO classes(department, course, description, max_students, current_students, num_credits, room_id)
   VALUES ('CS', 101, 'Computer Science 101', 50, 0, 4, 20001);
 
-INSERT INTO classes(department, course, description, max_students,
-                     current_students, num_credits, room_id)
+INSERT INTO classes(department, course, description, max_students,  current_students, num_credits, room_id)
   VALUES ('ECN', 203, 'Economics 203', 15, 0, 3, 20002);
 
-INSERT INTO classes(department, course, description, max_students,
-                     current_students, num_credits, room_id)
+INSERT INTO classes(department, course, description, max_students, current_students, num_credits, room_id)
   VALUES ('CS', 102, 'Computer Science 102', 35, 3, 4, 20003);
 
-INSERT INTO classes(department, course, description, max_students,
-                     current_students, num_credits, room_id)
+INSERT INTO classes(department, course, description, max_students, current_students, num_credits, room_id)
   VALUES ('MUS', 410, 'Music 410', 5, 4, 3, 20005);
 
-INSERT INTO classes(department, course, description, max_students,
-                     current_students, num_credits, room_id)
+INSERT INTO classes(department, course, description, max_students, current_students, num_credits, room_id)
   VALUES ('ECN', 101, 'Economics 101', 50, 0, 4, 20007);
 
-INSERT INTO classes(department, course, description, max_students,
-                     current_students, num_credits, room_id)
+INSERT INTO classes(department, course, description, max_students, current_students, num_credits, room_id)
   VALUES ('NUT', 307, 'Nutrition 307', 20, 2, 4, 20008);
 
-INSERT INTO classes(department, course, description, max_students,
-                     current_students, num_credits, room_id)
+INSERT INTO classes(department, course, description, max_students, current_students, num_credits, room_id)
   VALUES ('MUS', 100, 'Music 100', 100, 0, 3, NULL);
 
 PROMPT registered_students table...
@@ -243,84 +190,64 @@ CREATE TABLE registered_students (
     REFERENCES classes (department, course)
   );
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10000, 'CS', 102, 'A');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10002, 'CS', 102, 'B');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10003, 'CS', 102, 'C');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10000, 'HIS', 101, 'A');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10001, 'HIS', 101, 'B');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10002, 'HIS', 101, 'B');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10003, 'HIS', 101, 'A');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10004, 'HIS', 101, 'C');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10005, 'HIS', 101, 'C');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10006, 'HIS', 101, 'E');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10007, 'HIS', 101, 'B');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10008, 'HIS', 101, 'A');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10009, 'HIS', 101, 'D');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10010, 'HIS', 101, 'A');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course,  grade)
   VALUES (10008, 'NUT', 307, 'A');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course,  grade)
   VALUES (10010, 'NUT', 307, 'A');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10009, 'MUS', 410, 'B');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10006, 'MUS', 410, 'E');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10011, 'MUS', 410, 'B');
 
-INSERT INTO registered_students (student_id, department, course,
-                                 grade)
+INSERT INTO registered_students (student_id, department, course, grade)
   VALUES (10000, 'MUS', 410, 'B');
 
 PROMPT RS_audit...
@@ -381,30 +308,22 @@ CREATE TABLE books (
 );
 
 INSERT INTO books (catalog_number, title, author1)
-  VALUES (1000, 'Oracle8i Advanced PL/SQL Programming',
-                'Urman, Scott');
+  VALUES (1000, 'Oracle8i Advanced PL/SQL Programming', 'Urman, Scott');
 
 INSERT INTO books (catalog_number, title, author1, author2, author3)
-  VALUES (1001, 'Oracle8i: A Beginner''s Guide',
-                'Abbey, Michael', 'Corey, Michael J.',
-                'Abramson, Ian');
+  VALUES (1001, 'Oracle8i: A Beginner''s Guide', 'Abbey, Michael', 'Corey, Michael J.', 'Abramson, Ian');
 
-INSERT INTO books (catalog_number, title, author1, author2, author3,
-                  author4)
-  VALUES (1002, 'Oracle8 Tuning',
-                'Corey, Michael J.', 'Abbey, Michael',
-                'Dechichio, Daniel J.', 'Abramson, Ian');
+INSERT INTO books (catalog_number, title, author1, author2, author3, author4)
+  VALUES (1002, 'Oracle8 Tuning', 'Corey, Michael J.', 'Abbey, Michael', 'Dechichio, Daniel J.', 'Abramson, Ian');
 
 INSERT INTO books (catalog_number, title, author1, author2)
-  VALUES (2001, 'A History of the World',
-                'Arlington, Arlene', 'Verity, Victor');
+  VALUES (2001, 'A History of the World', 'Arlington, Arlene', 'Verity, Victor');
 
 INSERT INTO books (catalog_number, title, author1)
   VALUES (3001, 'Bach and the Modern World', 'Foo, Fred');
 
 INSERT INTO books (catalog_number, title, author1)
-  VALUES (3002, 'Introduction to the Piano',
-                'Morenson, Mary');
+  VALUES (3002, 'Introduction to the Piano', 'Morenson, Mary');
 
 DROP TYPE BookList FORCE;
 
