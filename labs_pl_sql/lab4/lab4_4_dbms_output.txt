@@ -1,0 +1,46 @@
+	COURSE: ITSE 1345
+	AUTHOR: Raul Zuniga
+	ASSIGNMENT: Lab 4 part 4
+	
+select * from treatment;
+
+                               PAT_NBR                                PHYS_ID TRT_PROCEDURE TRT_DATE
+-------------------------------------- -------------------------------------- ------------- ---------
+                                  1379                                    103 27-45         25-MAR-99 
+                                  3249                                    101 13-08         12-FEB-99 
+                                  3249                                    103 88-20         22-JAN-99 
+                                  3249                                    103 88-20         24-JAN-00 
+                                  4500                                    101 13-08         04-FEB-99 
+                                  5116                                    104 52-14         03-APR-99 
+                                  5116                                    104 52-14         05-FEB-01 
+                                  5872                                    105 60-00         13-FEB-00 
+                                  8031                                    102 52-14         15-MAR-00 
+                                  8659                                    104 60-00         08-APR-01 
+10 rows selected
+                                  
+A treatment procedure cannot be given to a patient more than once on same day:
+Patient Number: 1379
+Treatment Procedure: 27-45
+Treatment Date: 25-MAR-99
+ 
+Inserting into treatment table with record using function hospital.newtreatment_pp: 
+Patient Number: 1379
+Physican ID: 104
+Treatment Procedure: 27-45
+Treatment Date: 15-MAY-99
+
+                               PAT_NBR                                PHYS_ID TRT_PROCEDURE TRT_DATE
+-------------------------------------- -------------------------------------- ------------- ---------
+                                  1379                                    103 27-45         25-MAR-99 
+                                  1379                                    104 27-45         15-MAY-99 
+                                  3249                                    101 13-08         12-FEB-99 
+                                  3249                                    103 88-20         22-JAN-99 
+                                  3249                                    103 88-20         24-JAN-00 
+                                  4500                                    101 13-08         04-FEB-99 
+                                  5116                                    104 52-14         03-APR-99 
+                                  5116                                    104 52-14         05-FEB-01 
+                                  5872                                    105 60-00         13-FEB-00 
+                                  8031                                    102 52-14         15-MAR-00 
+                                  8659                                    104 60-00         08-APR-01 
+
+ 11 rows selected                                 

@@ -1,0 +1,82 @@
+COURSE: ITSE 1345
+AUTHOR: Raul Zuniga
+ASSIGNMENT: Lab 4 part 4
+	
+select * from treatment;
+	
+                               PAT_NBR                                PHYS_ID TRT_PROCEDURE TRT_DATE
+-------------------------------------- -------------------------------------- ------------- ---------
+                                  1379                                    103 27-45         25-MAR-99 
+                                  3249                                    101 13-08         12-FEB-99 
+                                  3249                                    103 88-20         22-JAN-99 
+                                  3249                                    103 88-20         24-JAN-00 
+                                  4500                                    101 13-08         04-FEB-99 
+                                  5116                                    104 52-14         03-APR-99 
+                                  5116                                    104 52-14         05-FEB-01 
+                                  5872                                    105 60-00         13-FEB-00 
+                                  8031                                    102 52-14         15-MAR-00 
+                                  8659                                    104 60-00         08-APR-01 
+
+ 10 rows selected 
+
+Error starting at line 16 in command:
+UPDATE treatment
+set trt_date='21-DEC-2013'
+WHERE pat_nbr = 1379
+Error report:
+SQL Error: ORA-20100: Invalid treatment date
+ORA-06512: at "F3964505.TREATMENT_DATE_TRG", line 27
+ORA-04088: error during execution of trigger 'F3964505.TREATMENT_DATE_TRG'
+
+
+Error starting at line 21 in command:
+INSERT INTO treatment(pat_nbr, phys_id, trt_procedure, trt_date)
+  VALUES(3249, 101, '13-08', '21-DEC-2013')
+Error report:
+SQL Error: ORA-20100: Invalid treatment date
+ORA-06512: at "F3964505.TREATMENT_DATE_TRG", line 27
+ORA-04088: error during execution of trigger 'F3964505.TREATMENT_DATE_TRG'
+
+
+Error starting at line 25 in command:
+UPDATE treatment
+set trt_date='21-JUL-2013'
+WHERE pat_nbr = 1379
+Error report:
+SQL Error: ORA-20100: Invalid treatment date
+ORA-06512: at "F3964505.TREATMENT_DATE_TRG", line 27
+ORA-04088: error during execution of trigger 'F3964505.TREATMENT_DATE_TRG'
+
+
+Error starting at line 30 in command:
+INSERT INTO treatment(pat_nbr, phys_id, trt_procedure, trt_date)
+  VALUES(3249, 101, '13-08', '21-JUL-2013')
+Error report:
+SQL Error: ORA-20100: Invalid treatment date
+ORA-06512: at "F3964505.TREATMENT_DATE_TRG", line 27
+ORA-04088: error during execution of trigger 'F3964505.TREATMENT_DATE_TRG'
+
+1 rows updated.
+1 rows inserted.
+
+
+select * from treatment;
+
+                               PAT_NBR                                PHYS_ID TRT_PROCEDURE TRT_DATE
+-------------------------------------- -------------------------------------- ------------- ---------
+                                  1379                                    103 27-45         25-MAR-99 
+                                  3249                                    101 13-08         11-OCT-13 
+                                  3249                                    101 13-08         12-OCT-13 
+                                  3249                                    103 88-20         22-JAN-99 
+                                  3249                                    103 88-20         24-JAN-00 
+                                  4500                                    101 13-08         04-FEB-99 
+                                  5116                                    104 52-14         03-APR-99 
+                                  5116                                    104 52-14         05-FEB-01 
+                                  5872                                    105 60-00         13-FEB-00 
+                                  8031                                    102 52-14         15-MAR-00 
+                                  8659                                    104 60-00         08-APR-01 
+
+ 11 rows selected 
+
+
+

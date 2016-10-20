@@ -1,0 +1,114 @@
+/* cursor1.pc
+ * Chapter 6, Oracle9i PL/SQL Programming by Scott Urman
+ * This Pro*C program illustrates the use of a cursor variable.
+ */
+
+/* Include C and SQL header files. */
+#include <stdio.h>
+EXEC SQL INCLUDE SQLCA;
+
+
+/* Character string to hold the username and password. */
+char *v_Username = "example/example";
+
+/* SQL Cursor variable */
+SQL_CURSOR v_CursorVar;
+
+/* Integer variable used to control table selection. */
+int v_Table;
+
+/* Output variables for rooms. */
+int v_RoomID;
+VARCHAR v_Description[2001];
+
+/* Output variables for classes. */
+VARCHAR v_Department[4];
+int v_Course;
+
+
+/* Error handling routine. Print out the error, and exit. */
+void handle_error() {
+  printf("SQL Error occurred!\n");
+  printf("%.*s\n", sqlca.sqlerrm.sqlerrml, sqlca.sqlerrm.sqlerrmc);
+  EXEC SQL ROLLBACK WORK RELEASE;
+  exit(1);
+}
+  
+int main() {
+  /* Character string to hold user input. */
+  char v_Choice[20];
+
+  /* Set up the error handling. Whenever a SQL error occurs, we
+     will call the handle_error() routine. */
+  EXEC SQL WHENEVER SQLERROR DO handle_error();
+
+  /* Connect to the database. */
+  EXEC SQL CONNECT :v_Username;
+  printf("Connected to Oracle.\n");
+
+  /* Allocate the cursor variable. */
+  EXEC SQL ALLOCATE :v_CursorVar;
+
+  /* Print a message asking the user for input, and retrieve their
+     selection into v_Choice. */
+  printf("Choose from (C)lasses or (R)omms. Enter c or r: ");
+  gets(v_Choice);
+
+  /* Determine the correct table. */
+  if (v_Choice[0] == 'c')
+    v_Table = 1;
+  else
+    v_Table = 2;
+
+  /* Open the cursor variable using an embedded PL/SQL block. */
+  EXEC SQL EXECUTE
+    BEGIN
+      IF :v_Table = 1 THEN
+        /* Open variable for the classes table. */
+        OPEN :v_CursorVar FOR
+          SELECT department, course
+            FROM classes;
+      ELSE
+        /* Open variable for the rooms table. */
+        OPEN :v_CursorVar FOR
+          SELECT room_id, description
+            FROM rooms;
+      END IF;
+    END;
+  END-EXEC;
+
+  /* Exit the loop when we are done fetching. */
+  EXEC SQL WHENEVER NOT FOUND DO BREAK;
+
+  /* Begin the fetch loop. */
+  for (;;) {
+    if (v_Table == 1) {
+      /* Fetch class info. */
+      EXEC SQL FETCH :v_CursorVar
+        INTO :v_Department, :v_Course;
+
+      /* Display it to the screen. Since v_Department is a
+         VARCHAR, use the .len field for the actual length
+         and the .arr field for the data. */
+      printf("%.*s %d\n", v_Department.len, v_Department.arr,
+                          v_Course);
+    }
+    else {
+      /* Fetch room info. */
+      EXEC SQL FETCH :v_CursorVar
+        INTO :v_RoomID, v_Description;
+
+      /* Display it to the screen. Since v_Description is a
+         VARCHAR, use the .len field for the actual length
+         and the .arr field for the data. */
+      printf("%d %.*s\n", v_RoomID, v_Description.len,
+                          v_Description.arr);
+    }
+  }
+
+  /* Close the cursor. */
+  EXEC SQL CLOSE :v_CursorVar;
+
+  /* Disconnect from the database. */
+  EXEC SQL COMMIT WORK RELEASE;
+}

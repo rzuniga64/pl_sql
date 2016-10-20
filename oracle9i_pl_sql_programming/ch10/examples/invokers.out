@@ -1,0 +1,369 @@
+REM invokers.out
+REM Chapter 10, Oracle9i PL/SQL Programming by Scott Urman
+REM This file shows the output from running invokers.sql in SQL*Plus.
+
+SQL> @invokers
+SQL> REM invokers.sql
+SQL> REM Chapter 5, Oracle8i Advanced PL/SQL Programming
+SQL> REM by Scott Urman
+SQL> 
+SQL> REM This script demonstrates the behavior of Oracle8i invoker's-
+SQL> REM rights procedures.
+SQL> 
+SQL> set echo on
+SQL> set serveroutput on
+SQL> 
+SQL> -- First create the users userA and userB, with the necessary
+SQL> -- objects in each.  We need to connect to an account with the
+SQL> -- necessary privileges, such as SYSTEM, to do this.
+SQL> -- You may also want to change the UNLIMITED TABLESPACE
+SQL> -- privilege below to grant explicit limits on tablespaces in your
+SQL> -- database.
+SQL> connect system/manager
+Connected.
+SQL> DROP USER UserA CASCADE;
+
+User dropped.
+
+SQL> CREATE USER UserA IDENTIFIED BY UserA;
+
+User created.
+
+SQL> GRANT CREATE SESSION, CREATE TABLE, CREATE PROCEDURE,
+  2  	   UNLIMITED TABLESPACE, CREATE ROLE, DROP ANY ROLE TO UserA;
+
+Grant succeeded.
+
+SQL> 
+SQL> DROP USER UserB CASCADE;
+
+User dropped.
+
+SQL> CREATE USER UserB IDENTIFIED BY UserB;
+
+User created.
+
+SQL> GRANT CREATE SESSION, CREATE TABLE, CREATE PROCEDURE,
+  2  	   UNLIMITED TABLESPACE TO UserB;
+
+Grant succeeded.
+
+SQL> 
+SQL> -- ***********************************
+SQL> -- Scenerio illustrated by Figure 5-18: Invoker's rights
+SQL> -- 				     RecordFullClasses owned by
+SQL> -- 				     UserA, temp_table owned by
+SQL> -- 				     both.
+SQL> -- ***********************************
+SQL> connect UserA/UserA
+Connected.
+SQL> 
+SQL> -- First create the classes table.
+SQL> CREATE TABLE classes (
+  2    department	CHAR(3),
+  3    course		NUMBER(3),
+  4    description	VARCHAR2(2000),
+  5    max_students	NUMBER(3),
+  6    current_students NUMBER(3),
+  7    num_credits	NUMBER(1),
+  8    room_id		NUMBER(5));
+
+Table created.
+
+SQL> 
+SQL> INSERT INTO classes(department, course, description, max_students,
+  2  			  current_students, num_credits, room_id)
+  3    VALUES ('HIS', 101, 'History 101', 30, 11, 4, 20000);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO classes(department, course, description, max_students,
+  2  			  current_students, num_credits, room_id)
+  3    VALUES ('HIS', 301, 'History 301', 30, 0, 4, 20004);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO classes(department, course, description, max_students,
+  2  			  current_students, num_credits, room_id)
+  3    VALUES ('CS', 101, 'Computer Science 101', 50, 0, 4, 20001);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO classes(department, course, description, max_students,
+  2  			  current_students, num_credits, room_id)
+  3    VALUES ('ECN', 203, 'Economics 203', 15, 0, 3, 20002);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO classes(department, course, description, max_students,
+  2  			  current_students, num_credits, room_id)
+  3    VALUES ('CS', 102, 'Computer Science 102', 35, 3, 4, 20003);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO classes(department, course, description, max_students,
+  2  			  current_students, num_credits, room_id)
+  3    VALUES ('MUS', 410, 'Music 410', 5, 4, 3, 20005);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO classes(department, course, description, max_students,
+  2  			  current_students, num_credits, room_id)
+  3    VALUES ('ECN', 101, 'Economics 101', 50, 0, 4, 20007);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO classes(department, course, description, max_students,
+  2  			  current_students, num_credits, room_id)
+  3    VALUES ('NUT', 307, 'Nutrition 307', 20, 2, 4, 20008);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO classes(department, course, description, max_students,
+  2  			  current_students, num_credits, room_id)
+  3    VALUES ('MUS', 100, 'Music 100', 100, 0, 3, NULL);
+
+1 row created.
+
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> -- And now temp_table.
+SQL> CREATE TABLE temp_table (
+  2    num_col	  NUMBER,
+  3    char_col   VARCHAR2(60)
+  4    );
+
+Table created.
+
+SQL> 
+SQL> -- We also need AlmostFull:
+SQL> CREATE OR REPLACE FUNCTION AlmostFull (
+  2    p_Department classes.department%TYPE,
+  3    p_Course     classes.course%TYPE)
+  4    RETURN BOOLEAN IS
+  5  
+  6    v_CurrentStudents NUMBER;
+  7    v_MaxStudents	 NUMBER;
+  8    v_ReturnValue	 BOOLEAN;
+  9    v_FullPercent	 CONSTANT NUMBER := 80;
+ 10  BEGIN
+ 11    -- Get the current and maximum students for the requested
+ 12    -- course.
+ 13    SELECT current_students, max_students
+ 14  	 INTO v_CurrentStudents, v_MaxStudents
+ 15  	 FROM classes
+ 16  	 WHERE department = p_Department
+ 17  	 AND course = p_Course;
+ 18  
+ 19    -- If the class is more full than the percentage given by
+ 20    -- v_FullPercent, return TRUE. Otherwise, return FALSE.
+ 21    IF (v_CurrentStudents / v_MaxStudents * 100) >= v_FullPercent THEN
+ 22  	 v_ReturnValue := TRUE;
+ 23    ELSE
+ 24  	 v_ReturnValue := FALSE;
+ 25    END IF;
+ 26  
+ 27    RETURN v_ReturnValue;
+ 28  END AlmostFull;
+ 29  /
+
+Function created.
+
+SQL> 
+SQL> -- Invoker's rights version of RecordFullClasses.	This version
+SQL> -- runs under the privilege set of its caller, not the owner.
+SQL> CREATE OR REPLACE PROCEDURE RecordFullClasses
+  2    AUTHID CURRENT_USER AS
+  3  
+  4    -- Note that we have to preface classes with
+  5    -- UserA, since it is owned by UserA only.
+  6    CURSOR c_Classes IS
+  7  	 SELECT department, course
+  8  	   FROM UserA.classes;
+  9  BEGIN
+ 10    FOR v_ClassRecord IN c_Classes LOOP
+ 11  	 -- Record all classes which don't have very much room left
+ 12  	 -- in temp_table.
+ 13  	 IF AlmostFull(v_ClassRecord.department,
+ 14  			     v_ClassRecord.course) THEN
+ 15  	   INSERT INTO temp_table (char_col) VALUES
+ 16  	     (v_ClassRecord.department || ' ' || v_ClassRecord.course ||
+ 17  	      ' is almost full!');
+ 18  	 END IF;
+ 19    END LOOP;
+ 20  END RecordFullClasses;
+ 21  /
+
+Procedure created.
+
+SQL> 
+SQL> -- Grant the necessary privileges to UserB.
+SQL> GRANT EXECUTE ON RecordFullClasses TO UserB;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON classes TO UserB;
+
+Grant succeeded.
+
+SQL> 
+SQL> -- Call as UserA.	This will insert into UserA.temp_table.
+SQL> BEGIN
+  2    RecordFullClasses;
+  3    COMMIT;
+  4  END;
+  5  /
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- Query temp_table.  There should be 1 row.
+SQL> SELECT * FROM temp_table;
+
+   NUM_COL CHAR_COL                                                             
+---------- ------------------------------------------------------------         
+           MUS 410 is almost full!                                              
+
+SQL> 
+SQL> -- Connect as UserB and create temp_table there.
+SQL> connect UserB/UserB
+Connected.
+SQL> CREATE TABLE temp_table (
+  2    num_col	  NUMBER,
+  3    char_col   VARCHAR2(60)
+  4    );
+
+Table created.
+
+SQL> 
+SQL> -- Now the call to RecordFullClasses will insert into
+SQL> -- UserB.temp_table.
+SQL> BEGIN
+  2    UserA.RecordFullClasses;
+  3    COMMIT;
+  4  END;
+  5  /
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- So we should have one row here as well.
+SQL> SELECT * FROM temp_table;
+
+   NUM_COL CHAR_COL                                                             
+---------- ------------------------------------------------------------         
+           MUS 410 is almost full!                                              
+
+SQL> 
+SQL> -- ***********************************
+SQL> -- Scenerio illustrated by Figure 5-19: UserB without SELECT on
+SQL> -- 				     classes
+SQL> -- ***********************************
+SQL> 
+SQL> -- Connect as UserA, and revoke the privilege.
+SQL> connect UserA/UserA
+Connected.
+SQL> REVOKE SELECT ON classes FROM UserB;
+
+Revoke succeeded.
+
+SQL> 
+SQL> -- Calling as UserA will still work:
+SQL> -- Call as UserA.	This will insert into UserA.temp_table.
+SQL> BEGIN
+  2    RecordFullClasses;
+  3    COMMIT;
+  4  END;
+  5  /
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- Query temp_table.  There should be 1 row.
+SQL> SELECT * FROM temp_table;
+
+   NUM_COL CHAR_COL                                                             
+---------- ------------------------------------------------------------         
+           MUS 410 is almost full!                                              
+           MUS 410 is almost full!                                              
+
+SQL> 
+SQL> -- Connect as UserB and call.
+SQL> connect UserB/UserB
+Connected.
+SQL> 
+SQL> -- Now the call to RecordFullClasses will fail.
+SQL> BEGIN
+  2    UserA.RecordFullClasses;
+  3  END;
+  4  /
+BEGIN
+*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+ORA-06512: at "USERA.RECORDFULLCLASSES", line 7 
+ORA-06512: at "USERA.RECORDFULLCLASSES", line 10 
+ORA-06512: at line 2 
+
+
+SQL> 
+SQL> -- ***********************************
+SQL> -- Scenerio illustrated by Figure 5-20: SELECT on classes GRANTed
+SQL> -- 				     via a role
+SQL> -- ***********************************
+SQL> 
+SQL> -- Connect as UserA, and create the role.
+SQL> connect UserA/UserA
+Connected.
+SQL> DROP ROLE UserA_Role;
+
+Role dropped.
+
+SQL> CREATE ROLE UserA_Role;
+
+Role created.
+
+SQL> GRANT SELECT ON classes TO UserA_Role;
+
+Grant succeeded.
+
+SQL> GRANT UserA_Role TO UserB;
+
+Grant succeeded.
+
+SQL> 
+SQL> -- Connect as UserB and call.
+SQL> connect UserB/UserB
+Connected.
+SQL> 
+SQL> -- Now the call to RecordFullClasses will succeed.
+SQL> BEGIN
+  2    UserA.RecordFullClasses;
+  3    COMMIT;
+  4  END;
+  5  /
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- We should have two rows now.
+SQL> SELECT * FROM temp_table;
+
+   NUM_COL CHAR_COL                                                             
+---------- ------------------------------------------------------------         
+           MUS 410 is almost full!                                              
+           MUS 410 is almost full!                                              
+
+SQL> exit
